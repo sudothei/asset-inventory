@@ -1,0 +1,24 @@
+{
+  "name": "cromulon",
+  "version": "1.0.0",
+  "description": "Inventory asset DB",
+  "main": "index.js",
+  "scripts": {
+    "test": "yarn test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sudothei/asset-inventory.git"
+  },
+  "keywords": [
+    "inventory",
+    "asset",
+    "management"
+  ],
+  "author": "Paige Venuto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sudothei/asset-inventory/issues"
+  },
+  "homepage": "https://github.com/sudothei/asset-inventory#readme"
+}
