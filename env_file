@@ -1,1 +1,6 @@
-PATH=/app/node_modules/.bin:$PATH
+COUNTRY=changeme
+STATE=changeme
+LOCATION=changeme
+ORGANIZATION=changeme
+ORGANIZATIONAL_UNIT=changeme
+COMMON_NAME=changeme
