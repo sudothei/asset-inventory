@@ -23,7 +23,6 @@ web/*.iml
 web/.vscode
 web/*.swp
 web/*.swo
-web/
 web/packages/react-devtools-core/dist
 web/packages/react-devtools-extensions/chrome/build
 web/packages/react-devtools-extensions/chrome/*.crx

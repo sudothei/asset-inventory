@@ -11,25 +11,21 @@ module.exports = {
     alias: {
       react: path.join(__dirname, "node_modules", "react"),
     },
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: { loader: "ts-loader" },
       },
       {
-        test: /\.css$/,
+        test: /\.scss$/,
         use: [
-          {
-            loader: "style-loader",
-          },
-          {
-            loader: "css-loader",
-          },
+          { loader: "style-loader" },
+          { loader: "css-loader" },
+          { loader: "sass-loader" },
         ],
       },
     ],
