@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DataTable } from "DataTable";
-import DashTopBar from "./DashTopBar"
+import { DashTopBar } from "./DashTopBar"
 import Box from '@mui/material/Box';
 
 export const Dashboard = () => {

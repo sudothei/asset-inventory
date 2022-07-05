@@ -10,15 +10,17 @@ import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
-const TopBar = () => {
+export const DashTopBar = () => {
     const [filterOn, setFilterOn] = useState(false);
 
     const handleFilterClick = () => {
-        setFilterOn(!filterOn);
+        setFilterOn(filterOn => !filterOn);
     }
 
     return (
@@ -49,15 +51,21 @@ const TopBar = () => {
                           ) : (
                     <FilterAltOffIcon
                         fontSize="large"
-                        color="secondary"
+                        color="primary"
                         onClick={handleFilterClick}
                         />
                               )
                   }
                   </IconButton>
+                  <IconButton>
+                      <FileDownloadIcon fontSize="large" color="primary"/>
+                  </IconButton>
                   <Input color="secondary" sx={{ input: {textAlign: 'center'} }} placeholder="Search"/>
                   <IconButton>
                       <AddBoxIcon fontSize="large" color="secondary"/>
+                  </IconButton>
+                  <IconButton>
+                      <DeleteIcon fontSize="large" color="primary"/>
                   </IconButton>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', flex: '1' }}>
@@ -67,5 +75,3 @@ const TopBar = () => {
           </AppBar>
            )
 }
-
-export default TopBar
