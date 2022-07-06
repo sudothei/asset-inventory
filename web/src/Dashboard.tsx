@@ -13,102 +13,26 @@ import Box from "@mui/material/Box";
 import { EnhancedTableHead } from "EnhancedTableHead";
 import { DashTopBar } from "./DashTopBar";
 
-type Order = "asc" | "desc";
-interface Data {
-  id: number;
-  name: string;
-  partno: string;
-  vendor: string;
-  category: string;
-  count: number;
-  location: string;
-}
-function createData(
-  id: number,
-  name: string,
-  partno: string,
-  vendor: string,
-  category: string,
-  count: number,
-  location: string
-): Data {
-  return { id, name, partno, vendor, category, count, location };
-}
-const rows = [
-  createData(
-    12435,
-    "10Gb Optics",
-    "124-56xd",
-    "Uber",
-    "Light Optics",
-    9,
-    "Charlotte"
-  ),
-  createData(
-    12531,
-    "8Gb HD",
-    "124-56xd",
-    "Dragon",
-    "Hard Drives",
-    100,
-    "Charlotte"
-  ),
-  createData(
-    15423,
-    "Audiophile Headphones",
-    "6XX",
-    "Sennheiser",
-    "Headphone",
-    1,
-    "Charlotte"
-  ),
-  createData(
-    12431,
-    "Micromix",
-    "123-45",
-    "Behringer",
-    "Mixers",
-    2,
-    "Charlotte"
-  ),
-];
+import { Order, getComparator } from "./sortingHelpers";
 
-function descendingComparator<Type>(a: Type, b: Type, orderBy: keyof Type) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// TODO replace with API call
+import { rows, AssetData } from "./rows";
 
 export const Dashboard = () => {
+  // For sorting rows by column
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Data>("name");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-
+  const [orderBy, setOrderBy] = useState<keyof AssetData>("id");
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof AssetData
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
+  // For selecting rows
+  const [selected, setSelected] = React.useState<readonly string[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n.id.toString());
@@ -117,13 +41,12 @@ export const Dashboard = () => {
     }
     setSelected([]);
   };
-
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleRowClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected: readonly string[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -134,11 +57,9 @@ export const Dashboard = () => {
         selected.slice(selectedIndex + 1)
       );
     }
-
     setSelected(newSelected);
   };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // for table to fill container properly
   const [tableHeight, setTableHeight] = useState(0);
@@ -177,7 +98,9 @@ export const Dashboard = () => {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id.toString())}
+                    onClick={(event) =>
+                      handleRowClick(event, row.id.toString())
+                    }
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
