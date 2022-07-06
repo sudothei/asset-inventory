@@ -32,18 +32,21 @@ export const Dashboard = () => {
   };
 
   // For selecting rows
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [selected, setSelected] = React.useState<readonly number[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.id.toString());
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
-  const handleRowClick = (event: React.MouseEvent<unknown>, id: string) => {
+  const handleCheckboxClick = (
+    event: React.MouseEvent<unknown>,
+    id: number
+  ) => {
     const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly string[] = [];
+    let newSelected: readonly number[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -59,7 +62,7 @@ export const Dashboard = () => {
     }
     setSelected(newSelected);
   };
-  const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   // for table to fill container properly
   const [tableHeight, setTableHeight] = useState(0);
@@ -92,15 +95,12 @@ export const Dashboard = () => {
             />
             <TableBody>
               {rows.sort(getComparator(order, orderBy)).map((row, index) => {
-                const isItemSelected = isSelected(row.id.toString());
+                const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) =>
-                      handleRowClick(event, row.id.toString())
-                    }
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -110,6 +110,7 @@ export const Dashboard = () => {
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"
+                        onClick={(event) => handleCheckboxClick(event, row.id)}
                         checked={isItemSelected}
                         inputProps={{
                           "aria-labelledby": labelId,
