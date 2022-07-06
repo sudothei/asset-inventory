@@ -1,19 +1,19 @@
 import * as React from "react";
-import TableHead from '@mui/material/TableHead';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import Checkbox from '@mui/material/Checkbox'
-import { visuallyHidden } from '@mui/utils';
+import TableHead from "@mui/material/TableHead";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Box from "@mui/material/Box";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import Checkbox from "@mui/material/Checkbox";
+import { visuallyHidden } from "@mui/utils";
 
 interface Column {
-  id: 'name' | 'partno' | 'vendor' | 'category' | 'count' | 'location';
+  id: "name" | "partno" | "vendor" | "category" | "count" | "location";
   label: string;
-  align?: 'right';
+  align?: "right";
 }
 interface Data {
-  id: number,
+  id: number;
   name: string;
   partno: string;
   vendor: string;
@@ -21,10 +21,13 @@ interface Data {
   count: number;
   location: string;
 }
-type Order = 'asc' | 'desc';
+type Order = "asc" | "desc";
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+  onRequestSort: (
+    event: React.MouseEvent<unknown>,
+    property: keyof Data
+  ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -32,18 +35,23 @@ interface EnhancedTableProps {
 }
 
 const columns: readonly Column[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'partno', label: 'Part #'},
-  { id: 'vendor', label: 'Vendor', align: 'right' },
-  { id: 'category', label: 'Category', align: 'right'},
-  { id: 'count', label: 'Count', align: 'right'},
-  { id: 'location', label: 'Location', align: 'right'},
+  { id: "name", label: "Name" },
+  { id: "partno", label: "Part #" },
+  { id: "vendor", label: "Vendor", align: "right" },
+  { id: "category", label: "Category", align: "right" },
+  { id: "count", label: "Count", align: "right" },
+  { id: "location", label: "Location", align: "right" },
 ];
 
-
 export const EnhancedTableHead = (props: EnhancedTableProps) => {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler =
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
@@ -59,7 +67,7 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              'aria-label': 'select all desserts',
+              "aria-label": "select all desserts",
             }}
           />
         </TableCell>
@@ -71,13 +79,13 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
           >
             <TableSortLabel
               active={orderBy === column.id}
-              direction={orderBy === column.id ? order : 'asc'}
+              direction={orderBy === column.id ? order : "asc"}
               onClick={createSortHandler(column.id)}
             >
               {column.label}
               {orderBy === column.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -86,4 +94,4 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
       </TableRow>
     </TableHead>
   );
-}
+};
