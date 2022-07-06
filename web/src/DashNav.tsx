@@ -16,7 +16,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 
 import { DashDrawer } from "./DashDrawer";
 
-export const DashTopBar = () => {
+export const DashNav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => {
     setDrawerOpen((drawerOpen) => !drawerOpen);

@@ -10,8 +10,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
-import { EnhancedTableHead } from "EnhancedTableHead";
-import { DashTopBar } from "./DashTopBar";
+import { EnhancedTableHead } from "./EnhancedTableHead";
+import { DashNav } from "./DashNav";
+import { AssetEditModal } from "./AssetEditModal";
 
 import { Order, getComparator } from "./sortingHelpers";
 
@@ -47,7 +48,6 @@ export const Dashboard = () => {
   ) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
-
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
@@ -73,15 +73,27 @@ export const Dashboard = () => {
       const height = window.innerHeight - 64 - 20;
       setTableHeight(height);
     };
-    // clean up
     window.removeEventListener("resize", onResize);
     window.addEventListener("resize", onResize, { passive: true });
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [currentAsset, setCurrentAsset] = useState<AssetData | undefined>();
+  const handleRowClick = (event: React.MouseEvent<unknown>, id: number) => {
+    setCurrentAsset(() => getAsset(id));
+    setEditModalOpen(true);
+  };
+  const getAsset = (id: number) => rows.filter((x) => x.id === id)[0];
+
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
-      <DashTopBar />
+      <DashNav />
+      <AssetEditModal
+        open={editModalOpen}
+        handleClose={() => setEditModalOpen(false)}
+        asset={currentAsset}
+      />
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: tableHeight, overflow: "auto" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
@@ -101,6 +113,7 @@ export const Dashboard = () => {
                 return (
                   <TableRow
                     hover
+                    onClick={(event) => handleRowClick(event, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
