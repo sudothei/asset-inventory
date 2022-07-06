@@ -1,6 +1,6 @@
 import * as React from "react";
+import { useState } from "react";
 
-import { styled } from "@mui/material/styles";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -8,56 +8,48 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import IconButton from "@mui/material/IconButton";
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import GroupIcon from "@mui/icons-material/Group";
 import CategoryIcon from "@mui/icons-material/Category";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-const drawerWidth = 240;
+import { UserAddModal } from "./UserAddModal";
 
 interface DashDrawerProps {
   open: boolean;
   handleClick: () => void;
 }
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
-
 export const DashDrawer = (props: DashDrawerProps) => {
   const { open, handleClick } = props;
+
+  // For the user add modal
+  const [userAddModalOpen, setUserAddModalOpen] = useState(false);
+  const toggleUserAddModal = () => {
+    setUserAddModalOpen((userAddModalOpen) => !userAddModalOpen);
+  };
 
   return (
     <Drawer
       sx={{
-        width: drawerWidth,
+        width: 240,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: drawerWidth,
+          width: 240,
           boxSizing: "border-box",
         },
       }}
-      variant="persistent"
+      variant="temporary"
       anchor="left"
       open={open}
+      onClose={handleClick}
     >
-      <DrawerHeader>
-        <IconButton>
-          <ChevronLeftIcon onClick={handleClick} />
-        </IconButton>
-      </DrawerHeader>
+      <UserAddModal open={userAddModalOpen} handleClose={toggleUserAddModal} />
       <Divider />
       <List>
         <ListItem key={"Add User"} disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={toggleUserAddModal}>
             <ListItemIcon>
               <PersonAddIcon />
             </ListItemIcon>

@@ -13,17 +13,30 @@ import MenuIcon from "@mui/icons-material/Menu";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import Icon from "@mui/material/Icon";
 
 import { DashDrawer } from "./DashDrawer";
+import { AssetAddModal } from "./AssetAddModal";
 
 export const DashNav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => {
     setDrawerOpen((drawerOpen) => !drawerOpen);
   };
+
+  // For the new asset modal
+  const [assetAddModalOpen, setAssetAddModalOpen] = useState(false);
+  const toggleAssetAddModal = () => {
+    setAssetAddModalOpen((assetAddModalOpen) => !assetAddModalOpen);
+  };
+
   return (
     <AppBar position="fixed">
       <DashDrawer open={drawerOpen} handleClick={toggleDrawer} />
+      <AssetAddModal
+        open={assetAddModalOpen}
+        handleClose={toggleAssetAddModal}
+      />
       <Toolbar sx={{ flex: "1" }}>
         <Box
           sx={{
@@ -55,6 +68,10 @@ export const DashNav = () => {
             alignItems: "center",
           }}
         >
+          {/* Included for visual symmetry */}
+          <IconButton disabled={true}>
+            <Icon fontSize="large" />
+          </IconButton>
           <IconButton>
             <FileDownloadIcon fontSize="large" color="primary" />
           </IconButton>
@@ -63,7 +80,7 @@ export const DashNav = () => {
             sx={{ input: { textAlign: "center" } }}
             placeholder="Search"
           />
-          <IconButton>
+          <IconButton onClick={toggleAssetAddModal}>
             <AddBoxIcon fontSize="large" color="secondary" />
           </IconButton>
           <IconButton>
