@@ -9,7 +9,7 @@
     "location",
     "sublocation",
     "description",
-    "serial_no",
+    "serialno",
     "category",
     "subcategory",
     "notes"
@@ -23,7 +23,7 @@
     "location": { "bsonType": "string" },
     "sublocation": { "bsonType": "string" },
     "description": { "bsonType": "string" },
-    "serial_no": { "bsonType": "string" },
+    "serialno": { "bsonType": "string" },
     "category": { "bsonType": "string" },
     "subcategory": { "bsonType": "string" },
     "notes": { "bsonType": "string" }

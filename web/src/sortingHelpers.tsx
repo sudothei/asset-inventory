@@ -1,6 +1,12 @@
+import { AssetData } from "./AssetData";
+
 export type Order = "asc" | "desc";
 
-function descendingComparator<Type>(a: Type, b: Type, orderBy: keyof Type) {
+function descendingComparator<Type>(
+  a: Type,
+  b: Type,
+  orderBy: keyof AssetData
+) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -10,7 +16,7 @@ function descendingComparator<Type>(a: Type, b: Type, orderBy: keyof Type) {
   return 0;
 }
 
-export function getComparator<Key extends keyof any>(
+export function getComparator<Key extends keyof AssetData>(
   order: Order,
   orderBy: Key
 ): (

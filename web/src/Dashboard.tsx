@@ -15,17 +15,18 @@ import { DashNav } from "./DashNav";
 import { AssetEditModal } from "./AssetEditModal";
 
 import { Order, getComparator } from "./sortingHelpers";
+import { AssetData, AssetDataRequired } from "./AssetData";
 
 // TODO replace with API call
-import { rows, AssetData } from "./rows";
+import { rows } from "./rows";
 
 export const Dashboard = () => {
   // For sorting rows by column
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof AssetData>("id");
+  const [orderBy, setOrderBy] = useState<keyof AssetDataRequired>("id");
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof AssetData
+    property: keyof AssetDataRequired
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -78,11 +79,15 @@ export const Dashboard = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // For the asset edit modal
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentAsset, setCurrentAsset] = useState<AssetData | undefined>();
   const handleRowClick = (event: React.MouseEvent<unknown>, id: number) => {
-    setCurrentAsset(() => getAsset(id));
-    setEditModalOpen(true);
+    const target = event.target as HTMLInputElement;
+    if (target.type !== "checkbox") {
+      setCurrentAsset(() => getAsset(id));
+      setEditModalOpen(true);
+    }
   };
   const getAsset = (id: number) => rows.filter((x) => x.id === id)[0];
 
@@ -122,7 +127,7 @@ export const Dashboard = () => {
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
-                        color="primary"
+                        color="secondary"
                         onClick={(event) => handleCheckboxClick(event, row.id)}
                         checked={isItemSelected}
                         inputProps={{

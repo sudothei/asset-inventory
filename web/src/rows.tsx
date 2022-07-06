@@ -1,13 +1,4 @@
-export interface AssetData {
-  id: number;
-  name: string;
-  partno: string;
-  vendor: string;
-  category: string;
-  count: number;
-  location: string;
-}
-
+import { AssetData } from "./AssetData";
 export const rows: AssetData[] = [
   {
     id: 12435,
