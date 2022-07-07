@@ -1,4 +1,4 @@
-import { AssetData } from "./AssetData";
+import { AssetData } from "src/types";
 export const rows: AssetData[] = [
   {
     id: 12435,

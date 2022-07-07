@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Dashboard } from "./Dashboard";
+import { Dashboard } from "./views/Dashboard/Dashboard";
 import "styles/index.scss";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";

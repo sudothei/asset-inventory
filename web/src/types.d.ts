@@ -22,3 +22,5 @@ export interface AssetDataRequired {
   count: number;
   location: string;
 }
+
+export type Order = "desc" | "asc";

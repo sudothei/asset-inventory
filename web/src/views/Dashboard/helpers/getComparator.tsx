@@ -1,6 +1,4 @@
-import { AssetData } from "./AssetData";
-
-export type Order = "asc" | "desc";
+import { AssetData, Order } from "src/types";
 
 function descendingComparator<Type>(
   a: Type,

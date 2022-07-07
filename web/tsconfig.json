@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "build/dist",
+    "rootDir": "./src",
+    "outDir": "dist",
+    "paths": {
+      "src/*": ["src/*"]
+    },
     "module": "esnext",
     "target": "es5",
     "lib": ["es6", "dom"],
@@ -12,10 +16,10 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "importHelpers": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
+    "suppressImplicitAnyIndexErrors": false,
     "noUnusedLocals": true
   },
   "exclude": [

@@ -10,12 +10,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
-import { EnhancedTableHead } from "./EnhancedTableHead";
-import { DashNav } from "./DashNav";
-import { AssetEditModal } from "./AssetEditModal";
+import { EnhancedTableHead } from "./components/EnhancedTableHead";
+import { DashNav } from "./components/DashNav";
+import { AssetEditModal } from "./components/AssetEditModal";
 
-import { Order, getComparator } from "./sortingHelpers";
-import { AssetData, AssetDataRequired } from "./AssetData";
+import { getComparator } from "./helpers/getComparator";
+
+import { AssetData, AssetDataRequired, Order } from "src/types";
 
 // TODO replace with API call
 import { rows } from "./rows";
@@ -37,9 +38,8 @@ export const Dashboard = () => {
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.id);
+      const newSelecteds = rows.map((n: AssetData) => n.id);
       setSelected(newSelecteds);
-      return;
     }
     setSelected([]);
   };
@@ -85,11 +85,11 @@ export const Dashboard = () => {
   const handleRowClick = (event: React.MouseEvent<unknown>, id: number) => {
     const target = event.target as HTMLInputElement;
     if (target.type !== "checkbox") {
-      setCurrentAsset(() => getAsset(id));
+      setCurrentAsset(() => getAssetByID(id));
       setEditModalOpen(true);
     }
   };
-  const getAsset = (id: number) => rows.filter((x) => x.id === id)[0];
+  const getAssetByID = (id: number) => rows.filter((x) => x.id === id)[0];
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
@@ -111,46 +111,50 @@ export const Dashboard = () => {
               rowCount={rows.length}
             />
             <TableBody>
-              {rows.sort(getComparator(order, orderBy)).map((row, index) => {
-                const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+              {rows
+                .sort(getComparator(order, orderBy))
+                .map((row: AssetData, index: number) => {
+                  const isItemSelected = isSelected(row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleRowClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="secondary"
-                        onClick={(event) => handleCheckboxClick(event, row.id)}
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={row.id.toString()}
-                      scope="row"
-                      padding="none"
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleRowClick(event, row.id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
                     >
-                      {row.name}
-                    </TableCell>
-                    <TableCell>{row.partno}</TableCell>
-                    <TableCell align="right">{row.vendor}</TableCell>
-                    <TableCell align="right">{row.category}</TableCell>
-                    <TableCell align="right">{row.count}</TableCell>
-                    <TableCell align="right">{row.location}</TableCell>
-                  </TableRow>
-                );
-              })}
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="secondary"
+                          onClick={(event) =>
+                            handleCheckboxClick(event, row.id)
+                          }
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={row.id.toString()}
+                        scope="row"
+                        padding="none"
+                      >
+                        {row.name}
+                      </TableCell>
+                      <TableCell>{row.partno}</TableCell>
+                      <TableCell align="right">{row.vendor}</TableCell>
+                      <TableCell align="right">{row.category}</TableCell>
+                      <TableCell align="right">{row.count}</TableCell>
+                      <TableCell align="right">{row.location}</TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </TableContainer>
