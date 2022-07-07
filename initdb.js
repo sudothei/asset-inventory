@@ -3,14 +3,12 @@
 db.createCollection("assets", { validator: assetValidator });
 db.createCollection("users", { validator: userValidator });
 
-// TODO create userValidator
-// TODO double check assetValidator when less tired
-
+// TODO add validation rules to properties
 const assetValidator = {
   $jsonSchema: {
     bsonType: "object",
     additionalProperties: false,
-    title: "part",
+    title: "asset",
     required: ["partno", "name", "vendor", "count", "location", "category"],
     properties: {
       _id: { bsonType: "objectId" },
@@ -25,6 +23,30 @@ const assetValidator = {
       category: { bsonType: "string" },
       subcategory: { bsonType: "string" },
       notes: { bsonType: "string" },
+    },
+  },
+};
+
+// TODO add validation rules to properties
+const userValidator = {
+  $jsonSchema: {
+    bsonType: "object",
+    additionalProperties: false,
+    title: "user",
+    properties: {
+      _id: { bsonType: "objectId" },
+      username: { bsonType: "string" },
+      password: { bsonType: "string" },
+      permissions: {
+        bsonType: "object",
+        properties: {
+          admin: { bsonType: "boolean" },
+          create: { bsonType: "boolean" },
+          read: { bsonType: "boolean" },
+          update: { bsonType: "boolean" },
+          delete: { bsonType: "boolean" },
+        },
+      },
     },
   },
 };
