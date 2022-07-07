@@ -8,7 +8,7 @@ import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
-import { Order } from "src/types";
+import Order from "types/Order";
 
 interface Column {
   id: "name" | "partno" | "vendor" | "category" | "count" | "location";
@@ -45,7 +45,7 @@ const columns: readonly Column[] = [
   { id: "location", label: "Location", align: "right" },
 ];
 
-export const EnhancedTableHead = (props: EnhancedTableProps) => {
+const EnhancedTableHead = (props: EnhancedTableProps) => {
   const {
     onSelectAllClick,
     order,
@@ -97,3 +97,4 @@ export const EnhancedTableHead = (props: EnhancedTableProps) => {
     </TableHead>
   );
 };
+export default EnhancedTableHead;

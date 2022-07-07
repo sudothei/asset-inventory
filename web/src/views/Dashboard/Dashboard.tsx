@@ -10,13 +10,15 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
-import { EnhancedTableHead } from "./components/EnhancedTableHead";
-import { DashNav } from "./components/DashNav";
-import { AssetEditModal } from "./components/AssetEditModal";
+import EnhancedTableHead from "./components/EnhancedTableHead";
+import DashNav from "./components/DashNav";
+import AssetEditModal from "./components/AssetEditModal";
 
-import { getComparator } from "./helpers/getComparator";
+import getComparator from "helpers/getComparator";
 
-import { AssetData, AssetDataRequired, Order } from "src/types";
+import Order from "types/Order";
+import AssetData from "types/AssetData";
+import AssetDataRequired from "types/AssetDataRequired";
 
 // TODO replace with API call
 import { rows } from "./rows";

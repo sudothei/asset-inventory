@@ -14,14 +14,14 @@ import GroupIcon from "@mui/icons-material/Group";
 import CategoryIcon from "@mui/icons-material/Category";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { UserAddModal } from "./UserAddModal";
+import UserAddModal from "./UserAddModal";
 
 interface DashDrawerProps {
   open: boolean;
   handleClick: () => void;
 }
 
-export const DashDrawer = (props: DashDrawerProps) => {
+const DashDrawer = (props: DashDrawerProps) => {
   const { open, handleClick } = props;
 
   // For the user add modal
@@ -87,3 +87,4 @@ export const DashDrawer = (props: DashDrawerProps) => {
     </Drawer>
   );
 };
+export default DashDrawer;

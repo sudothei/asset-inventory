@@ -1,8 +1,10 @@
 import * as React from "react";
+
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { AssetData } from "src/types";
+
+import AssetData from "types/AssetData";
 
 interface AssetEditModalProps {
   open: boolean;
@@ -10,7 +12,7 @@ interface AssetEditModalProps {
   asset: AssetData | undefined;
 }
 
-export const AssetEditModal = (props: AssetEditModalProps) => {
+const AssetEditModal = (props: AssetEditModalProps) => {
   const { open, handleClose, asset } = props;
 
   return (
@@ -43,3 +45,4 @@ export const AssetEditModal = (props: AssetEditModalProps) => {
     </Modal>
   );
 };
+export default AssetEditModal;

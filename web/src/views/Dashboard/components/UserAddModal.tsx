@@ -8,7 +8,7 @@ interface UserAddModalProps {
   handleClose: () => void;
 }
 
-export const UserAddModal = (props: UserAddModalProps) => {
+const UserAddModal = (props: UserAddModalProps) => {
   const { open, handleClose } = props;
 
   return (
@@ -41,3 +41,4 @@ export const UserAddModal = (props: UserAddModalProps) => {
     </Modal>
   );
 };
+export default UserAddModal;

@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "dist",
     "paths": {
-      "src/*": ["src/*"]
+      "types/*": ["src/types/*"],
+      "helpers/*": ["src/helpers/*"]
     },
     "module": "esnext",
     "target": "es5",

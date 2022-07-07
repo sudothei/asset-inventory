@@ -15,10 +15,10 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Icon from "@mui/material/Icon";
 
-import { DashDrawer } from "./DashDrawer";
-import { AssetAddModal } from "./AssetAddModal";
+import DashDrawer from "./DashDrawer";
+import AssetAddModal from "./AssetAddModal";
 
-export const DashNav = () => {
+const DashNav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => {
     setDrawerOpen((drawerOpen) => !drawerOpen);
@@ -96,3 +96,4 @@ export const DashNav = () => {
     </AppBar>
   );
 };
+export default DashNav;
