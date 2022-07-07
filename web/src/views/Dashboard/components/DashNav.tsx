@@ -15,8 +15,14 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Icon from "@mui/material/Icon";
 
+import { CSVLink } from "react-csv";
+
 import DashDrawer from "./DashDrawer";
 import AssetAddModal from "./AssetAddModal";
+
+// TODO replace with API call
+import { rows } from "../rows";
+const csvHeaders = Object.keys(rows[0]).map((x) => ({ label: x, key: x }));
 
 const DashNav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -73,7 +79,14 @@ const DashNav = () => {
             <Icon fontSize="large" />
           </IconButton>
           <IconButton>
-            <FileDownloadIcon fontSize="large" color="primary" />
+            <CSVLink
+              headers={csvHeaders}
+              data={rows}
+              filename="assets.csv"
+              target="_blank"
+            >
+              <FileDownloadIcon fontSize="large" color="primary" />
+            </CSVLink>
           </IconButton>
           <Input
             color="secondary"
