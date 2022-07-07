@@ -26,19 +26,35 @@
 
 ## FAQ
 
-Why use Rust, TypeScript and MongoDB?
+**Q:** How can I connect directly to the database?
 
-- Because I'm not a boomer who uses old tech.
-
----
-
-How can I connect directly to the database?
-
-- You can use `mongosh`, but really shouldn't as this can skip input validation
+**A:** You can use `mongosh`, but really shouldn't as this can skip input validation
   and cause problems.
 
 ---
 
-Can you add a feature for me?
+**Q:** How do I  migrate the database?
 
-- Unless you're my boss, build it yourself and submit a pull request.
+**A:** Use `mongodump` and `mongorestore`
+
+To back up: `mongodump -d <database_name> -o <directory_backup>`
+
+To restore: `mongorestore -d <database_name> <directory_backup>`=
+
+---
+
+**Q:** How do I backup the database?
+
+**A:** Use filesystem snapshots as `mongodump` is not a resilient backup method.
+
+---
+
+**Q:** Can you add a feature for me?
+
+**A:** Unless you're my boss, build it yourself and submit a pull request.
+
+---
+
+**Q:** Why use Rust, TypeScript and MongoDB?
+
+**A:** Because I'm not a boomer who uses old tech.
