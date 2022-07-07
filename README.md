@@ -16,3 +16,29 @@
 3. Edit the `env_file` to point to the MongoDB server
 4. Run `docker-compose build inventory-asset-db`
 5. Run `docker-compose up --no-deps -d inventory-asset-db`
+
+## Finishing steps
+
+1. Sign into the default admin account and change the username and password.
+    - Default username: `admin`
+    - Default password: `admin`
+2. Add users and assign permissions
+
+## FAQ
+
+Why use Rust, TypeScript and MongoDB?
+
+- Because I'm not a boomer who uses old tech.
+
+---
+
+How can I connect directly to the database?
+
+- You can use `mongosh`, but really shouldn't as this can skip input validation
+  and cause problems.
+
+---
+
+Can you add a feature for me?
+
+- Unless you're my boss, build it yourself and submit a pull request.
