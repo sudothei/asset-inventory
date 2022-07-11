@@ -37,7 +37,7 @@ const userValidator = {
     properties: {
       _id: { bsonType: "objectId" },
       username: { bsonType: "string" },
-      password: { bsonType: "string" },
+      password_hash: { bsonType: "string" },
       permissions: {
         bsonType: "object",
         properties: {
@@ -54,7 +54,7 @@ const userValidator = {
 
 db.users.insert({
   username: "admin",
-  password: "admin",
+  password_hash: "$2b$14$jC97DWBMU5xdQoqFpRHhM.kcCIKnUtniZKkTplJwnW6OhV0g/8DIm",
   permissions: {
     admin: true,
     create: true,

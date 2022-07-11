@@ -4,3 +4,8 @@ LOCATION=changeme
 ORGANIZATION=changeme
 ORGANIZATIONAL_UNIT=changeme
 COMMON_NAME=changeme
+
+BCRYPT_COST_FACTOR=14
+
+DATABASE_URL         = mongodb://host.docker.internal:27017
+DATABASE_NAME        = inventoryAssetDB

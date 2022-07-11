@@ -15,3 +15,5 @@ FROM nginx:latest
 COPY --from=build-stage /app/build/ /app/build
 COPY --from=generate-certs ./ /etc/nginx/certs
 COPY ./web.conf /etc/nginx/conf.d/web.conf
+
+USER web
