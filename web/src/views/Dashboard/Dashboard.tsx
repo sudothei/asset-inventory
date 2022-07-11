@@ -42,8 +42,9 @@ export const Dashboard = () => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n: AssetData) => n.id);
       setSelected(newSelecteds);
+    } else {
+      setSelected([]);
     }
-    setSelected([]);
   };
   const handleCheckboxClick = (
     event: React.MouseEvent<unknown>,

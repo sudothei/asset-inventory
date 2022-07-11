@@ -1,3 +1,4 @@
+const db = connect("127.0.0.1:27017/inventoryAssetDB");
 // TODO create database and with auth for app
 
 db.createCollection("assets", { validator: assetValidator });
