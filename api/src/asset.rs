@@ -10,27 +10,33 @@ pub type Assets = Response<Asset>;
 
 #[derive(Serialize)]
 pub struct Asset {
-    pub message: String,
-}
-
-impl Asset {
-    pub fn new(message: String) -> Self {
-        Self { message }
-    }
+    pub id: i32,
+    pub name: String,
+    pub assetno: String,
+    pub vendor: String,
+    pub category: String,
+    pub subcategory: Option<String>,
+    pub count: i32,
+    pub location: String,
+    pub sublocation: Option<String>,
+    pub description: Option<String>,
+    pub serialno: Option<String>,
+    pub notes: Option<String>,
 }
 
 #[derive(Deserialize)]
 pub struct AssetRequest {
-    pub message: Option<String>,
-}
-
-impl AssetRequest {
-    pub fn to_asset(&self) -> Option<Asset> {
-        match &self.message {
-            Some(message) => Some(Asset::new(message.to_string())),
-            None => None,
-        }
-    }
+    pub name: String,
+    pub assetno: String,
+    pub vendor: String,
+    pub category: String,
+    pub subcategory: Option<String>,
+    pub count: i32,
+    pub location: String,
+    pub sublocation: Option<String>,
+    pub description: Option<String>,
+    pub serialno: Option<String>,
+    pub notes: Option<String>,
 }
 
 /// list all assets `/assets`
@@ -48,7 +54,7 @@ pub async fn list() -> HttpResponse {
 pub async fn create(asset_req: Json<AssetRequest>) -> HttpResponse {
     HttpResponse::Created()
         .content_type("application/json")
-        .json(asset_req.to_asset())
+        .json(())
 }
 
 /// find a asset by its id `/assets/{id}`
