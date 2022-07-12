@@ -27,10 +27,11 @@
 
 ## Finishing steps
 
-1. Sign into the default admin account and change the username and password.
+1. Visit the web app in the browser
+2. Sign into the default admin account and change the username and password
     - Default username: `admin`
     - Default password: `admin`
-2. Add users and assign permissions
+3. Add users and assign permissions
 
 ## FAQ
 
