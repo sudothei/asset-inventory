@@ -2,8 +2,6 @@ use actix_web::web::{Json, Path};
 use actix_web::{delete, get, patch, post, put, HttpResponse};
 use serde::{Deserialize, Serialize};
 
-pub const APPLICATION_JSON: &str = "application/json";
-
 pub struct Response<T> {
     pub results: Vec<T>,
 }
@@ -41,7 +39,7 @@ pub async fn list() -> HttpResponse {
     // TODO
     let assets = { "assets": vec![] };
     HttpResponse::Ok()
-        .content_type(APPLICATION_JSON)
+        .content_type("application/json")
         .json(assets)
 }
 
@@ -49,7 +47,7 @@ pub async fn list() -> HttpResponse {
 #[post("/assets")]
 pub async fn create(asset_req: Json<AssetRequest>) -> HttpResponse {
     HttpResponse::Created()
-        .content_type(APPLICATION_JSON)
+        .content_type("application/json")
         .json(asset_req.to_asset())
 }
 
@@ -57,7 +55,7 @@ pub async fn create(asset_req: Json<AssetRequest>) -> HttpResponse {
 #[get("/assets/{id}")]
 pub async fn get(path: Path<(String,)>) -> HttpResponse {
     // TODO find asset a asset by ID and return it
-    HttpResponse::Ok().content_type(APPLICATION_JSON).json({})
+    HttpResponse::Ok().content_type("application/json").json({})
 }
 
 /// delete a asset by its id `/assets/{id}`
@@ -65,7 +63,7 @@ pub async fn get(path: Path<(String,)>) -> HttpResponse {
 pub async fn delete(path: Path<(String,)>) -> HttpResponse {
     // TODO delete asset by ID
     HttpResponse::NoContent()
-        .content_type(APPLICATION_JSON)
+        .content_type("application/json")
         .await
         .unwrap()
 }

@@ -11,14 +11,14 @@ import { visuallyHidden } from "@mui/utils";
 import Order from "types/Order";
 
 interface Column {
-  id: "name" | "partno" | "vendor" | "category" | "count" | "location";
+  id: "name" | "assetno" | "vendor" | "category" | "count" | "location";
   label: string;
   align?: "right";
 }
 interface Data {
   id: number;
   name: string;
-  partno: string;
+  assetno: string;
   vendor: string;
   category: string;
   count: number;
@@ -38,7 +38,7 @@ interface EnhancedTableProps {
 
 const columns: readonly Column[] = [
   { id: "name", label: "Name" },
-  { id: "partno", label: "Part #" },
+  { id: "assetno", label: "Part #" },
   { id: "vendor", label: "Vendor", align: "right" },
   { id: "category", label: "Category", align: "right" },
   { id: "count", label: "Count", align: "right" },

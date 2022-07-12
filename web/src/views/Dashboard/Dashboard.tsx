@@ -16,9 +16,9 @@ import AssetEditModal from "./components/AssetEditModal";
 
 import getComparator from "helpers/getComparator";
 
-import Order from "types/Order";
-import AssetData from "types/AssetData";
-import AssetDataRequired from "types/AssetDataRequired";
+import Order from "src/types/Order";
+import AssetData from "src/types/AssetData";
+import AssetDataRequired from "src/types/AssetDataRequired";
 
 // TODO replace with API call
 import { rows } from "./rows";
@@ -150,7 +150,7 @@ export const Dashboard = () => {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell>{row.partno}</TableCell>
+                      <TableCell>{row.assetno}</TableCell>
                       <TableCell align="right">{row.vendor}</TableCell>
                       <TableCell align="right">{row.category}</TableCell>
                       <TableCell align="right">{row.count}</TableCell>

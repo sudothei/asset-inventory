@@ -1,7 +1,7 @@
 interface AssetDataRequired {
   id: number;
   name: string;
-  partno: string;
+  assetno: string;
   vendor: string;
   category: string;
   count: number;

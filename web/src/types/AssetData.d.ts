@@ -1,7 +1,7 @@
 interface AssetData {
   id: number;
   name: string;
-  partno: string;
+  assetno: string;
   vendor: string;
   category: string;
   subcategory?: string;
