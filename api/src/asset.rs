@@ -10,6 +10,7 @@ pub struct Response<T> {
 
 pub type Assets = Response<Asset>;
 
+#[derive(Serialize)]
 pub struct Asset {
     pub message: String,
 }
@@ -20,6 +21,7 @@ impl Asset {
     }
 }
 
+#[derive(Deserialize)]
 pub struct AssetRequest {
     pub message: Option<String>,
 }
@@ -33,13 +35,11 @@ impl AssetRequest {
     }
 }
 
-/// list 50 last assets `/assets`
+/// list all assets `/assets`
 #[get("/assets")]
 pub async fn list() -> HttpResponse {
-    // TODO find the last 50 assets and return them
-
-    let assets = Assets { results: vec![] };
-
+    // TODO
+    let assets = { "assets": vec![] };
     HttpResponse::Ok()
         .content_type(APPLICATION_JSON)
         .json(assets)
@@ -57,25 +57,13 @@ pub async fn create(asset_req: Json<AssetRequest>) -> HttpResponse {
 #[get("/assets/{id}")]
 pub async fn get(path: Path<(String,)>) -> HttpResponse {
     // TODO find asset a asset by ID and return it
-    let found_asset: Option<Asset> = None;
-
-    match found_asset {
-        Some(asset) => HttpResponse::Ok()
-            .content_type(APPLICATION_JSON)
-            .json(asset),
-        None => HttpResponse::NoContent()
-            .content_type(APPLICATION_JSON)
-            .await
-            .unwrap(),
-    }
+    HttpResponse::Ok().content_type(APPLICATION_JSON).json({})
 }
 
 /// delete a asset by its id `/assets/{id}`
 #[delete("/assets/{id}")]
 pub async fn delete(path: Path<(String,)>) -> HttpResponse {
     // TODO delete asset by ID
-    // in any case return status 204
-
     HttpResponse::NoContent()
         .content_type(APPLICATION_JSON)
         .await
