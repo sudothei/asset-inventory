@@ -8,15 +8,22 @@
 4. Copy the `initdb.js` file to the current directory
 5. Run `mongosh`
 6. Run `load("initdb.js")`
+7. Add the following to `/etc/mongodb.conf`
+
+    ```conf
+    security:
+        authorization: enabled
+    ```
+
+8. Run `sudo systemctl start mongodb` again
 
 ## To setup the app server
 
 1. Install Docker on Linux: [docs.docker.com/engine/install](https://docs.docker.com/engine/install/)
 2. Install Docker Compose: [docs.docker.com/compose/install](https://docs.docker.com/compose/install/)
-3. Edit the `env_file` to point to the MongoDB server
-4. Choose the `BCRYPT_COST_FACTOR` you prefer
-5. Run `docker-compose build inventory-asset-db`
-6. Run `docker-compose up --no-deps -d inventory-asset-db`
+3. Edit the `env_file` to your preferences
+4. Run `docker-compose build inventory-asset-db`
+5. Run `docker-compose up --no-deps -d inventory-asset-db`
 
 ## Finishing steps
 

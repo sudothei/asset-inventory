@@ -1,5 +1,14 @@
-const db = connect("127.0.0.1:27017/inventoryAssetDB");
-// TODO create database and with auth for app
+const db = connect("127.0.0.1:27017/admin");
+db.createUser({
+  user: "inventoryAssetDBAdmin",
+  pwd: "changeme",
+  roles: [
+    { role: "userAdminAnyDatabase", db: "admin" },
+    { role: "readWriteAnyDatabase", db: "admin" },
+  ],
+});
+
+db = db.getSiblingDB("inventoryAssetDB");
 
 db.createCollection("assets", { validator: assetValidator });
 db.createCollection("users", { validator: userValidator });
@@ -63,3 +72,5 @@ db.users.insert({
     delete: true,
   },
 });
+
+db.adminCommand({ shutdown: 1 });

@@ -1,23 +1,25 @@
+use actix_web::web::{Json, Path};
+use actix_web::{delete, get, patch, post, put, HttpResponse};
+use serde::{Deserialize, Serialize};
+
+pub const APPLICATION_JSON: &str = "application/json";
+
+pub struct Response<T> {
+    pub results: Vec<T>,
+}
+
 pub type Assets = Response<Asset>;
 
-#[derive(Debug, Deserialize, Serialize)]
 pub struct Asset {
-    pub id: String,
-    pub created_at: DateTime<Utc>,
-    pub message: String
+    pub message: String,
 }
 
 impl Asset {
     pub fn new(message: String) -> Self {
-        Self {
-            id: Uuid::new_v4().to_string(),
-            created_at: Utc::now(),
-            message
-        }
+        Self { message }
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
 pub struct AssetRequest {
     pub message: Option<String>,
 }

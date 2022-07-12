@@ -5,3 +5,7 @@ edition = "2021"
 
 [dependencies]
 bcrypt = "0.13.0"
+actix-web = "4.1.0"
+actix-cors = "0.6.1"
+jwt = "0.16.0"
+serde = "1.0.139"

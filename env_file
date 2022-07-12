@@ -1,3 +1,4 @@
+# for the node web server
 COUNTRY=changeme
 STATE=changeme
 LOCATION=changeme
@@ -5,7 +6,15 @@ ORGANIZATION=changeme
 ORGANIZATIONAL_UNIT=changeme
 COMMON_NAME=changeme
 
+# for the api server's password hashing
 BCRYPT_COST_FACTOR=14
 
-DATABASE_URL         = mongodb://host.docker.internal:27017
-DATABASE_NAME        = inventoryAssetDB
+# for the api server to connect to the db
+DATABASE_URL=mongodb://host.docker.internal:27017
+DATABASE_NAME=inventoryAssetDB
+DATABASE_USERNAME=inventoryAssetDBAdmin
+# also change in initdb.js
+DATABASE_PASSWORD=changeme
+
+# for the api server to allow CORS requests from the web server
+SERVER_HOSTNAME=localhost
