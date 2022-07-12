@@ -1,18 +1,16 @@
 /*
  * Connect to the clean database and add a service account
  */
-const db = connect("127.0.0.1:27017/admin");
+let db = connect("127.0.0.1:27017/admin");
 db.createUser({
-  user: "inventoryAssetDBAdmin",
+  user: "inventoryAssetDB",
   pwd: "changeme",
   roles: [{ role: "readWriteAnyDatabase", db: "admin" }],
 });
-console.log("The service account has been created for the api server");
 
 /*
  * Add a user admin account
  */
-console.log("Please choose a password for the admin account");
 db.createUser({
   user: "admin",
   pwd: passwordPrompt(),
@@ -21,7 +19,6 @@ db.createUser({
     { role: "readWriteAnyDatabase", db: "admin" },
   ],
 });
-console.log("The admin account has been created");
 
 /*
  * Connect to the inventoryAssetDB database to create it
@@ -150,23 +147,23 @@ const userValidator = {
         additionalProperties: false,
         properties: {
           admin: {
-            bsonType: "boolean",
+            bsonType: "bool",
             description: "Allows management of user accounts.",
           },
           create: {
-            bsonType: "boolean",
+            bsonType: "bool",
             description: "Allows creation of new assets.",
           },
           read: {
-            bsonType: "boolean",
+            bsonType: "bool",
             description: "Allows reading of existing assets.",
           },
           update: {
-            bsonType: "boolean",
+            bsonType: "bool",
             description: "Allows updating existing assets.",
           },
           delete: {
-            bsonType: "boolean",
+            bsonType: "bool",
             description: "Allows deleting existing assets.",
           },
         },
@@ -180,30 +177,3 @@ const userValidator = {
  */
 db.createCollection("assets", { validator: assetValidator });
 db.createCollection("users", { validator: userValidator });
-
-/*
- * Create the default admin account for the web app
- * TODO move this logic to the rust api, triggered if there are 0 users at all
- * This will help apply the correct bcrypt cost factor
- */
-
-/*
- *db.users.insert({
- *  username: "admin",
- *  password_hash: "admin",
- *  permissions: {
- *    admin: true,
- *    create: true,
- *    read: true,
- *    update: true,
- *    delete: true,
- *  },
- *});
- */
-
-/*
- * Shut down mongod
- * This is important, as security changes are not applied until service restart
- * Before restart, the user must enable authentication in /etc/mongodb.conf
- */
-db.adminCommand({ shutdown: 1 });

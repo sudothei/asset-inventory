@@ -7,7 +7,8 @@
 3. Start service: `sudo systemctl start mongodb` (may require reboot if any errors)
 4. Copy the `initdb.js` file to the current directory
 5. Run `mongosh`
-6. Run `load("initdb.js")`
+6. Run `load("initdb.js")`, it will prompt for a password to use for the admin
+   account (this is different from the inventoryAssetDB service account)
 7. Add the following to `/etc/mongodb.conf`
 
     ```conf
@@ -15,7 +16,7 @@
         authorization: enabled
     ```
 
-8. Run `sudo systemctl start mongodb` again
+8. Run `sudo systemctl restart mongodb` to apply security changes
 
 ## To setup the app server
 
