@@ -12,7 +12,7 @@ BCRYPT_COST_FACTOR=14
 # for the api server to connect to the db
 DATABASE_URL=mongodb://host.docker.internal:27017
 DATABASE_NAME=inventoryAssetDB
-DATABASE_USERNAME=inventoryAssetDBAdmin
+DATABASE_USERNAME=inventoryAssetDB
 # also change in initdb.js
 DATABASE_PASSWORD=changeme
 
