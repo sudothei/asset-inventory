@@ -4,12 +4,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
-import AssetData from "types/AssetData";
+import Asset from "types/Asset";
 
 interface AssetEditModalProps {
   open: boolean;
   handleClose: () => void;
-  asset: AssetData | undefined;
+  asset: Asset | undefined;
 }
 
 const AssetEditModal = (props: AssetEditModalProps) => {

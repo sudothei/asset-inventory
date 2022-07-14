@@ -1,4 +1,4 @@
-interface AssetDataRequired {
+interface AssetRequired {
   id: number;
   name: string;
   assetno: string;
@@ -7,4 +7,4 @@ interface AssetDataRequired {
   count: number;
   location: string;
 }
-export default AssetDataRequired;
+export default AssetRequired;

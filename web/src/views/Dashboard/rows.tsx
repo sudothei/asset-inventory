@@ -1,5 +1,5 @@
-import AssetData from "src/types/AssetData";
-export const rows: AssetData[] = [
+import Asset from "types/Asset";
+export const rows: Asset[] = [
   {
     id: 12435,
     name: "10Gb Optics",

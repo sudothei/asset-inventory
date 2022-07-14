@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "src/hooks";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,32 +16,39 @@ import DashNav from "./components/DashNav";
 import AssetEditModal from "./components/AssetEditModal";
 
 import getComparator from "helpers/getComparator";
+import getAssets from "actionCreators/getAssets";
 
-import Order from "src/types/Order";
-import AssetData from "src/types/AssetData";
-import AssetDataRequired from "src/types/AssetDataRequired";
+import Order from "types/Order";
+import Asset from "types/Asset";
+import AssetRequired from "types/AssetRequired";
+import { RootState } from "src/store";
 
-// TODO replace with API call
-import { rows } from "./rows";
+const Dashboard = () => {
+  const dispatch = useAppDispatch();
 
-export const Dashboard = () => {
-  // For sorting rows by column
+  useEffect(() => {
+    dispatch<any>(getAssets());
+  }, [dispatch]);
+
+  const assets = useAppSelector((state: RootState) => state.assets);
+
+  // For sorting assets by column
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof AssetDataRequired>("id");
+  const [orderBy, setOrderBy] = useState<keyof AssetRequired>("id");
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof AssetDataRequired
+    property: keyof AssetRequired
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  // For selecting rows
+  // For selecting assets
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n: AssetData) => n.id);
+      const newSelecteds = assets.map((n: Asset) => n.id);
       setSelected(newSelecteds);
     } else {
       setSelected([]);
@@ -84,7 +92,7 @@ export const Dashboard = () => {
 
   // For the asset edit modal
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [currentAsset, setCurrentAsset] = useState<AssetData | undefined>();
+  const [currentAsset, setCurrentAsset] = useState<Asset | undefined>();
   const handleRowClick = (event: React.MouseEvent<unknown>, id: number) => {
     const target = event.target as HTMLInputElement;
     if (target.type !== "checkbox") {
@@ -92,7 +100,8 @@ export const Dashboard = () => {
       setEditModalOpen(true);
     }
   };
-  const getAssetByID = (id: number) => rows.filter((x) => x.id === id)[0];
+  const getAssetByID = (id: number) =>
+    assets.filter((x: Asset) => x.id === id)[0];
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
@@ -111,12 +120,12 @@ export const Dashboard = () => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={assets.length}
             />
             <TableBody>
-              {rows
+              {assets
                 .sort(getComparator(order, orderBy))
-                .map((row: AssetData, index: number) => {
+                .map((row: Asset, index: number) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -165,3 +174,5 @@ export const Dashboard = () => {
     </Box>
   );
 };
+
+export default Dashboard;

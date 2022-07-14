@@ -4,8 +4,11 @@
     "rootDir": ".",
     "outDir": "dist",
     "paths": {
-      "types/*": ["src/types/*"],
-      "helpers/*": ["src/helpers/*"]
+      "actionCreators/*": ["src/actionCreators/*"],
+      "helpers/*": ["src/helpers/*"],
+      "reducers/*": ["src/reducers/*"],
+      "src/*": ["src/*"],
+      "types/*": ["src/types/*"]
     },
     "module": "esnext",
     "target": "es5",

@@ -1,4 +1,4 @@
-interface AssetData {
+interface Asset {
   id: number;
   name: string;
   assetno: string;
@@ -12,4 +12,4 @@ interface AssetData {
   serialno?: string;
   notes?: string;
 }
-export default AssetData;
+export default Asset;
