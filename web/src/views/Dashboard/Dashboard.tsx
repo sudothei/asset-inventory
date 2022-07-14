@@ -22,12 +22,14 @@ import Order from "types/Order";
 import Asset from "types/Asset";
 import AssetRequired from "types/AssetRequired";
 import { RootState } from "src/store";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch<any>(getAssets());
+    (dispatch as ThunkDispatch<RootState, unknown, AnyAction>)(getAssets());
   }, [dispatch]);
 
   const assets = useAppSelector((state: RootState) => state.assets);
