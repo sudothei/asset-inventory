@@ -10,11 +10,12 @@ COMMON_NAME=changeme
 BCRYPT_COST_FACTOR=14
 
 # for the api server to connect to the db
-DATABASE_URL=mongodb://host.docker.internal:27017
+DATABASE_HOSTNAME=host.docker.internal
+DATABASE_PORT=27017
 DATABASE_NAME=inventoryAssetDB
 DATABASE_USERNAME=inventoryAssetDB
 # also change in initdb.js
 DATABASE_PASSWORD=changeme
 
-# for the api server to allow CORS requests from the web server
-SERVER_HOSTNAME=localhost
+API_HOSTNAME=localhost
+API_PORT=80

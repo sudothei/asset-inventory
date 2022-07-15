@@ -9,20 +9,24 @@ mod asset;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // environment variables
-    //let hostname: String = env::var("SERVER_HOSTNAME").expect("SERVER_HOSTNAME must be set");
     let database_username: String =
         env::var("DATABASE_USERNAME").expect("DATABASE_USERNAME must be set");
     let database_password: String =
         env::var("DATABASE_PASSWORD").expect("DATABASE_PASSWORD must be set");
+    let database_hostname: String =
+        env::var("DATABASE_HOSTNAME").expect("DATABASE_HOSTNAME must be set");
+    let database_port: String = env::var("DATABASE_PORT").expect("DATABASE_PORT must be set");
+    let database_name: String = env::var("DATABASE_NAME").expect("DATABASE_NAME must be set");
+    let api_port: String = env::var("API_PORT").expect("API_PORT must be set");
 
     // database config
     let mut client_options = ClientOptions::parse(format!(
-        "mongodb://{}:{}@localhost:27017",
-        database_username, database_password
+        "mongodb://{}:{}@{}:{}",
+        database_username, database_password, database_hostname, database_port
     ))
     .await
     .unwrap();
-    client_options.app_name = Some("inventoryAssetDB".to_string());
+    client_options.app_name = Some(database_name.to_string());
     let db = web::Data::new(Mutex::new(
         Client::with_options(client_options)
             .unwrap()
@@ -31,13 +35,8 @@ async fn main() -> std::io::Result<()> {
 
     // uses move to avoid closure problems with db
     HttpServer::new(move || {
-        // uses cors to allow api requests from frontend, cloned hostname to avoid closure issues
+        // uses cors to allow api requests from any origin
         let cors = Cors::default()
-            // TODO use ENV VAR somehow
-            //.allowed_origin_fn(|origin, _req_head| {
-            //println!("{:?}", origin);
-            //return origin.to_str().unwrap().contains("localhost");
-            //})
             .allow_any_origin()
             .allow_any_method()
             .allowed_headers(vec![
@@ -52,7 +51,7 @@ async fn main() -> std::io::Result<()> {
             .service(asset::list)
             .service(asset::create)
     })
-    .bind("0.0.0.0:8080")?
+    .bind(format!("0.0.0.0:{}", api_port))?
     .run()
     .await
 }
