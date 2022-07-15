@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src",
     "rootDir": ".",
     "outDir": "dist",
     "paths": {
-      "actionCreators/*": ["src/actionCreators/*"],
-      "helpers/*": ["src/helpers/*"],
-      "reducers/*": ["src/reducers/*"],
-      "src/*": ["src/*"],
-      "types/*": ["src/types/*"]
+      "thunks/*": ["thunks/*"],
+      "helpers/*": ["helpers/*"],
+      "slices/*": ["slices/*"],
+      "types/*": ["types/*"]
     },
     "module": "esnext",
     "target": "es5",

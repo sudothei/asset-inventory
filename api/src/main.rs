@@ -9,7 +9,7 @@ mod asset;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // environment variables
-    let hostname: String = env::var("SERVER_HOSTNAME").expect("SERVER_HOSTNAME must be set");
+    //let hostname: String = env::var("SERVER_HOSTNAME").expect("SERVER_HOSTNAME must be set");
     let database_username: String =
         env::var("DATABASE_USERNAME").expect("DATABASE_USERNAME must be set");
     let database_password: String =
@@ -33,7 +33,12 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         // uses cors to allow api requests from frontend, cloned hostname to avoid closure issues
         let cors = Cors::default()
-            .allowed_origin(format!("https://{}/", hostname.clone()).as_str())
+            // TODO use ENV VAR somehow
+            //.allowed_origin_fn(|origin, _req_head| {
+            //println!("{:?}", origin);
+            //return origin.to_str().unwrap().contains("localhost");
+            //})
+            .allow_any_origin()
             .allow_any_method()
             .allowed_headers(vec![
                 http::header::AUTHORIZATION,

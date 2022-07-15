@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import thunk from "redux-thunk";
-import assetsReducer from "reducers/assetsReducer";
+import assetsReducer from "slices/assetsSlice";
 
 const store = configureStore({
   reducer: {
     assets: assetsReducer,
   },
-  middleware: [thunk],
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

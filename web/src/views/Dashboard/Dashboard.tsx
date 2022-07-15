@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "src/hooks";
+import { useAppSelector, useAppDispatch } from "hooks";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -16,20 +16,18 @@ import DashNav from "./components/DashNav";
 import AssetEditModal from "./components/AssetEditModal";
 
 import getComparator from "helpers/getComparator";
-import getAssets from "actionCreators/getAssets";
+import getAssets from "thunks/getAssets";
 
 import Order from "types/Order";
 import Asset from "types/Asset";
 import AssetRequired from "types/AssetRequired";
-import { RootState } from "src/store";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
+import { RootState } from "store";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    (dispatch as ThunkDispatch<RootState, unknown, AnyAction>)(getAssets());
+    dispatch(getAssets());
   }, [dispatch]);
 
   const assets = useAppSelector((state: RootState) => state.assets);
