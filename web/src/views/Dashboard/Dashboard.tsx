@@ -30,11 +30,11 @@ const Dashboard = () => {
     dispatch(getAssets());
   }, [dispatch]);
 
-  const assets = useAppSelector((state: RootState) => state.assets);
+  const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
 
   // For sorting assets by column
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof AssetRequired>("id");
+  const [orderBy, setOrderBy] = useState<keyof AssetRequired>("name");
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof AssetRequired
@@ -45,10 +45,10 @@ const Dashboard = () => {
   };
 
   // For selecting assets
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
+  const [selected, setSelected] = React.useState<readonly string[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = assets.map((n: Asset) => n.id);
+      const newSelecteds = assets.map((n: Asset) => n._id.$oid);
       setSelected(newSelecteds);
     } else {
       setSelected([]);
@@ -56,12 +56,12 @@ const Dashboard = () => {
   };
   const handleCheckboxClick = (
     event: React.MouseEvent<unknown>,
-    id: number
+    oid: string
   ) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
+    const selectedIndex = selected.indexOf(oid);
+    let newSelected: string[] = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selected, oid);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -74,7 +74,7 @@ const Dashboard = () => {
     }
     setSelected(newSelected);
   };
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
+  const isSelected = (oid: string) => selected.indexOf(oid) !== -1;
 
   // for table to fill container properly
   const [tableHeight, setTableHeight] = useState(0);
@@ -93,15 +93,15 @@ const Dashboard = () => {
   // For the asset edit modal
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentAsset, setCurrentAsset] = useState<Asset | undefined>();
-  const handleRowClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleRowClick = (event: React.MouseEvent<unknown>, oid: string) => {
     const target = event.target as HTMLInputElement;
     if (target.type !== "checkbox") {
-      setCurrentAsset(() => getAssetByID(id));
+      setCurrentAsset(() => getAssetByID(oid));
       setEditModalOpen(true);
     }
   };
-  const getAssetByID = (id: number) =>
-    assets.filter((x: Asset) => x.id === id)[0];
+  const getAssetByID = (oid: string) =>
+    assets.filter((x: Asset) => x._id.$oid === oid)[0];
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
@@ -124,26 +124,27 @@ const Dashboard = () => {
             />
             <TableBody>
               {assets
+                .slice()
                 .sort(getComparator(order, orderBy))
-                .map((row: Asset, index: number) => {
-                  const isItemSelected = isSelected(row.id);
+                .map((asset: Asset, index: number) => {
+                  const isItemSelected = isSelected(asset._id.$oid);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleRowClick(event, row.id)}
+                      onClick={(event) => handleRowClick(event, asset._id.$oid)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={asset._id.$oid}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="secondary"
                           onClick={(event) =>
-                            handleCheckboxClick(event, row.id)
+                            handleCheckboxClick(event, asset._id.$oid)
                           }
                           checked={isItemSelected}
                           inputProps={{
@@ -153,17 +154,17 @@ const Dashboard = () => {
                       </TableCell>
                       <TableCell
                         component="th"
-                        id={row.id.toString()}
+                        id={asset._id.$oid}
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {asset.name}
                       </TableCell>
-                      <TableCell>{row.assetno}</TableCell>
-                      <TableCell align="right">{row.vendor}</TableCell>
-                      <TableCell align="right">{row.category}</TableCell>
-                      <TableCell align="right">{row.count}</TableCell>
-                      <TableCell align="right">{row.location}</TableCell>
+                      <TableCell>{asset.assetno}</TableCell>
+                      <TableCell align="right">{asset.vendor}</TableCell>
+                      <TableCell align="right">{asset.category}</TableCell>
+                      <TableCell align="right">{asset.count}</TableCell>
+                      <TableCell align="right">{asset.location}</TableCell>
                     </TableRow>
                   );
                 })}

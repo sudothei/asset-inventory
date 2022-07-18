@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { useAppSelector } from "hooks";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -20,11 +21,16 @@ import { CSVLink } from "react-csv";
 import DashDrawer from "./DashDrawer";
 import AssetAddModal from "./AssetAddModal";
 
-// TODO replace with API call
-import { rows } from "../rows";
-const csvHeaders = Object.keys(rows[0]).map((x) => ({ label: x, key: x }));
+import Asset from "types/Asset";
+import { RootState } from "store";
 
 const DashNav = () => {
+  const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
+  const csvHeaders =
+    assets.length > 0
+      ? Object.keys(assets[0]).map((x) => ({ label: x, key: x }))
+      : [];
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => {
     setDrawerOpen((drawerOpen) => !drawerOpen);
@@ -81,7 +87,7 @@ const DashNav = () => {
           <IconButton>
             <CSVLink
               headers={csvHeaders}
-              data={rows}
+              data={assets}
               filename="assets.csv"
               target="_blank"
             >

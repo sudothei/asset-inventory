@@ -10,7 +10,7 @@ const assetsSlice = createSlice({
     builder.addCase(
       getAssets.fulfilled,
       (state, action: PayloadAction<Asset[]>) => {
-        state = action.payload;
+        return action.payload;
       }
     );
   },

@@ -1,5 +1,7 @@
 interface Asset {
-  id: number;
+  _id: {
+    $oid: string;
+  };
   name: string;
   assetno: string;
   vendor: string;

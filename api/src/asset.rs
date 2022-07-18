@@ -1,6 +1,6 @@
 use actix_web::web::Json;
 use actix_web::{get, post, web, HttpResponse, Responder};
-use mongodb::{bson::doc, Database};
+use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
 use std::sync::*;
 use tokio_stream::StreamExt;
@@ -22,7 +22,7 @@ pub struct AssetRequest {
 
 #[derive(Serialize, Deserialize)]
 pub struct Asset {
-    pub _id: i32,
+    pub _id: ObjectId,
     pub name: String,
     pub assetno: String,
     pub vendor: String,
@@ -53,10 +53,25 @@ pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
 
 /// create a asset `/assets`
 #[post("/assets")]
-pub async fn create(asset_req: Json<AssetRequest>) -> HttpResponse {
-    HttpResponse::Created()
-        .content_type("application/json")
-        .json(asset_req)
+pub async fn create(
+    data: web::Data<Mutex<Database>>,
+    asset_req: Json<AssetRequest>,
+) -> impl Responder {
+    let db = data.lock().unwrap();
+    let asset_collection = db.collection("assets");
+    let result = asset_collection.insert_one(asset_req, None).await;
+    match result {
+        Ok(rs) => {
+            let new_id = rs.inserted_id.as_object_id();
+            HttpResponse::Ok()
+                .content_type("application/json")
+                .json(new_id)
+        }
+        Err(err) => {
+            println!("Failed! {}", err);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
 }
 
 // find a asset by its id `/assets/{id}`

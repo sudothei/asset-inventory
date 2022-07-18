@@ -8,6 +8,7 @@ import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
+import AssetRequired from "types/AssetRequired";
 import Order from "types/Order";
 
 interface Column {
@@ -15,20 +16,11 @@ interface Column {
   label: string;
   align?: "right";
 }
-interface Data {
-  id: number;
-  name: string;
-  assetno: string;
-  vendor: string;
-  category: string;
-  count: number;
-  location: string;
-}
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof AssetRequired
   ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
@@ -55,7 +47,7 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
     onRequestSort,
   } = props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof AssetRequired) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
@@ -69,7 +61,7 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              "aria-label": "select all desserts",
+              "aria-label": "select all assets",
             }}
           />
         </TableCell>

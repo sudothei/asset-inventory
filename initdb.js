@@ -41,19 +41,19 @@ const assetValidator = {
       },
       name: {
         bsonType: "string",
-        minLength: 5,
+        minLength: 1,
         maxLength: 255,
         description: "Must be a string, between 5 and 255 characters required.",
       },
       assetno: {
         bsonType: "string",
-        minLength: 5,
+        minLength: 1,
         maxLength: 255,
         description: "Must be a string, between 5 and 255 characters required.",
       },
       vendor: {
         bsonType: "string",
-        minLength: 5,
+        minLength: 1,
         maxLength: 255,
         description: "Must be a string, between 5 and 255 characters required.",
       },
@@ -64,25 +64,25 @@ const assetValidator = {
       },
       location: {
         bsonType: "string",
-        minLength: 5,
+        minLength: 1,
         maxLength: 255,
         description:
           "Ex: Charlotte office. Must be a string between 5 and 255 characters, required.",
       },
       sublocation: {
-        bsonType: "string",
+        bsonType: ["string", "null"],
         maxLength: 255,
         description:
           "Ex: building 3, rack 2, U 5. Must be a string up to 255 characters",
       },
       description: {
-        bsonType: "string",
+        bsonType: ["string", "null"],
         maxLength: 255,
         description:
           "Ex: blue case, 30 inch depth. Must be a string up to 255 characters.",
       },
       serialno: {
-        bsonType: "string",
+        bsonType: ["string", "null"],
         maxLength: 255,
         description: "Must be a string up to 255 characters.",
       },
@@ -93,12 +93,12 @@ const assetValidator = {
           "Ex: Storage Drives. Must be a string up to 255 characters, required.",
       },
       subcategory: {
-        bsonType: "string",
+        bsonType: ["string", "null"],
         maxLength: 255,
         description: "Ex: SSD Drives. Must be a string up to 255 characters.",
       },
       notes: {
-        bsonType: "string",
+        bsonType: ["string", "null"],
         maxLength: 255,
         description:
           "Ex: Has a Sailor Moon sticker on the chassis. Must be a string up to 255 characters.",
@@ -112,6 +112,13 @@ const userValidator = {
     bsonType: "object",
     additionalProperties: false,
     title: "user",
+    required: [
+      "firstName",
+      "lastName",
+      "username",
+      "passwordHash",
+      "permissions",
+    ],
     properties: {
       _id: {
         bsonType: "objectId",
@@ -135,7 +142,7 @@ const userValidator = {
         maxLength: 70,
         description: "Must be a string between 1 and 70 characters, required.",
       },
-      password_hash: {
+      passwordHash: {
         bsonType: "string",
         minLength: 12,
         maxLength: 255,
@@ -144,6 +151,7 @@ const userValidator = {
       },
       permissions: {
         bsonType: "object",
+        required: ["admin", "create", "read", "updated", "delete"],
         additionalProperties: false,
         properties: {
           admin: {

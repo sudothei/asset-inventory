@@ -13,4 +13,3 @@ RUN cargo build --release
 FROM debian:buster-slim
 COPY --from=build /api/target/release/api .
 CMD ["./api"]
-USER api

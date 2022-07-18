@@ -1,5 +1,4 @@
 interface AssetRequired {
-  id: number;
   name: string;
   assetno: string;
   vendor: string;
