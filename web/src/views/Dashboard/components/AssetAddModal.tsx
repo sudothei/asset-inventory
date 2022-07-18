@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 interface AssetAddModalProps {
   open: boolean;
@@ -164,6 +165,17 @@ const AssetAddModal = (props: AssetAddModalProps) => {
             variant="filled"
             size="small"
           />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            paddingTop: 4,
+          }}
+        >
+          <Button variant="contained" color="secondary">
+            Add New
+          </Button>
         </Box>
       </Box>
     </Modal>

@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 import Asset from "types/Asset";
 
@@ -191,6 +192,17 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             variant="filled"
             size="small"
           />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            paddingTop: 4,
+          }}
+        >
+          <Button variant="contained" color="secondary">
+            Save Changes
+          </Button>
         </Box>
       </Box>
     </Modal>
