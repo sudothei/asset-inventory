@@ -52,7 +52,6 @@ const Dashboard = () => {
   const filterByTerm = (object: Object): Boolean => {
     let result = false;
     Object.values(object).forEach((value) => {
-      console.log(value);
       try {
         if (value.toString().toLowerCase().includes(searchterm.toLowerCase()))
           result = true;
