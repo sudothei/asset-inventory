@@ -24,7 +24,13 @@ import AssetAddModal from "./AssetAddModal";
 import Asset from "types/Asset";
 import { RootState } from "store";
 
-const DashNav = () => {
+interface DashNavProps {
+  onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const DashNav = (props: DashNavProps) => {
+  const { onSearch } = props;
+
   const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
   const csvHeaders =
     assets.length > 0
@@ -98,6 +104,7 @@ const DashNav = () => {
             color="secondary"
             sx={{ input: { textAlign: "center" } }}
             placeholder="Search"
+            onChange={onSearch}
           />
           <IconButton onClick={toggleAssetAddModal}>
             <AddBoxIcon fontSize="large" color="secondary" />

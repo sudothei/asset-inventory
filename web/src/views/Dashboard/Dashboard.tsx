@@ -44,6 +44,27 @@ const Dashboard = () => {
     setOrderBy(property);
   };
 
+  // For filtering assets with search
+  const [searchterm, setSearchterm] = useState<string>("");
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchterm(event.target.value);
+  };
+  const filterByTerm = (object: Object): Boolean => {
+    let result = false;
+    Object.values(object).forEach((value) => {
+      console.log(value);
+      try {
+        if (value.toString().toLowerCase().includes(searchterm.toLowerCase()))
+          result = true;
+      } catch {
+        if (value) {
+          if (filterByTerm(value)) result = true;
+        }
+      }
+    });
+    return result;
+  };
+
   // For selecting assets
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +126,7 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
-      <DashNav />
+      <DashNav onSearch={handleSearch} />
       <AssetEditModal
         open={editModalOpen}
         handleClose={() => setEditModalOpen(false)}
@@ -126,6 +147,7 @@ const Dashboard = () => {
               {assets
                 .slice()
                 .sort(getComparator(order, orderBy))
+                .filter(filterByTerm)
                 .map((asset: Asset, index: number) => {
                   const isItemSelected = isSelected(asset._id.$oid);
                   const labelId = `enhanced-table-checkbox-${index}`;
