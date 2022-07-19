@@ -20,6 +20,7 @@ import { CSVLink } from "react-csv";
 
 import DashDrawer from "./DashDrawer";
 import AssetAddModal from "./AssetAddModal";
+import AssetDeleteMenu from "./AssetDeleteMenu";
 
 import Asset from "types/Asset";
 import { RootState } from "store";
@@ -31,12 +32,14 @@ interface DashNavProps {
 const DashNav = (props: DashNavProps) => {
   const { onSearch } = props;
 
+  // For the download as CSV button
   const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
   const csvHeaders =
     assets.length > 0
       ? Object.keys(assets[0]).map((x) => ({ label: x, key: x }))
       : [];
 
+  // For the left drawer
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => {
     setDrawerOpen((drawerOpen) => !drawerOpen);
@@ -48,12 +51,28 @@ const DashNav = (props: DashNavProps) => {
     setAssetAddModalOpen((assetAddModalOpen) => !assetAddModalOpen);
   };
 
+  // For the delete menu
+  const [deleteAnchorEl, setDeleteAnchorEl] =
+    React.useState<null | HTMLElement>(null);
+  const open = Boolean(deleteAnchorEl);
+  const handleDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setDeleteAnchorEl(event.currentTarget);
+  };
+  const handleDeleteClose = () => {
+    setDeleteAnchorEl(null);
+  };
+
   return (
     <AppBar position="fixed">
       <DashDrawer open={drawerOpen} handleClick={toggleDrawer} />
       <AssetAddModal
         open={assetAddModalOpen}
         handleClose={toggleAssetAddModal}
+      />
+      <AssetDeleteMenu
+        anchorEl={deleteAnchorEl}
+        open={open}
+        onClose={handleDeleteClose}
       />
       <Toolbar sx={{ flex: "1" }}>
         <Box
@@ -87,8 +106,8 @@ const DashNav = (props: DashNavProps) => {
           }}
         >
           {/* Included for visual symmetry */}
-          <IconButton disabled={true}>
-            <Icon fontSize="large" />
+          <IconButton onClick={handleDeleteClick}>
+            <DeleteIcon fontSize="large" color="primary" />
           </IconButton>
           <IconButton>
             <CSVLink
@@ -109,8 +128,8 @@ const DashNav = (props: DashNavProps) => {
           <IconButton onClick={toggleAssetAddModal}>
             <AddBoxIcon fontSize="large" color="secondary" />
           </IconButton>
-          <IconButton>
-            <DeleteIcon fontSize="large" color="primary" />
+          <IconButton disabled={true}>
+            <Icon fontSize="large" />
           </IconButton>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "flex-end", flex: "1" }}>
