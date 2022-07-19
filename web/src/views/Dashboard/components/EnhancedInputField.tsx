@@ -2,17 +2,19 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Controller } from "react-hook-form";
+import { Controller, Control } from "react-hook-form";
+import AssetRequest from "types/AssetRequest";
 
 interface EnhancedInputFieldRequiredProps {
   label: string;
-  name: string;
-  control: any;
+  name: keyof AssetRequest;
+  control: Control<AssetRequest, object>;
 }
 interface EnhancedInputFieldOptionalProps {
   type?: "number" | "text";
   required?: boolean;
   multiline?: boolean;
+  rules?: object;
 }
 interface EnhancedInputFieldProps
   extends EnhancedInputFieldRequiredProps,
@@ -21,14 +23,16 @@ const defaultProps: EnhancedInputFieldOptionalProps = {
   type: "text",
   required: false,
   multiline: false,
+  rules: {},
 };
 
 const EnhancedInputField = (props: EnhancedInputFieldProps) => {
-  const { name, required, label, type, control, multiline } = props;
+  const { name, required, label, type, control, multiline, rules } = props;
   return (
     <Controller
       name={name}
       control={control}
+      rules={rules}
       render={({
         field: { onChange, value },
         fieldState: { error },

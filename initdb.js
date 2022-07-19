@@ -70,19 +70,19 @@ const assetValidator = {
           "Ex: Charlotte office. Must be a string between 5 and 255 characters, required.",
       },
       sublocation: {
-        bsonType: ["string", "null"],
+        bsonType: "string",
         maxLength: 255,
         description:
           "Ex: building 3, rack 2, U 5. Must be a string up to 255 characters",
       },
       description: {
-        bsonType: ["string", "null"],
+        bsonType: "string",
         maxLength: 255,
         description:
           "Ex: blue case, 30 inch depth. Must be a string up to 255 characters.",
       },
       serialno: {
-        bsonType: ["string", "null"],
+        bsonType: "string",
         maxLength: 255,
         description: "Must be a string up to 255 characters.",
       },
@@ -93,12 +93,12 @@ const assetValidator = {
           "Ex: Storage Drives. Must be a string up to 255 characters, required.",
       },
       subcategory: {
-        bsonType: ["string", "null"],
+        bsonType: "string",
         maxLength: 255,
         description: "Ex: SSD Drives. Must be a string up to 255 characters.",
       },
       notes: {
-        bsonType: ["string", "null"],
+        bsonType: "string",
         maxLength: 255,
         description:
           "Ex: Has a Sailor Moon sticker on the chassis. Must be a string up to 255 characters.",

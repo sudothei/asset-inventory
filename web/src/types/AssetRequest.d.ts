@@ -1,14 +1,9 @@
-interface AssetRequest {
-  name: string;
-  assetno: string;
-  vendor: string;
-  category: string;
-  count: number;
-  location: string;
-  subcategory?: string | null;
-  sublocation?: string | null;
-  description?: string | null;
-  serialno?: string | null;
-  notes?: string | null;
+import AssetRequired from "types/AssetRequired";
+interface AssetRequest extends AssetRequired {
+  subcategory?: string;
+  sublocation?: string;
+  description?: string;
+  serialno?: string;
+  notes?: string;
 }
 export default AssetRequest;
