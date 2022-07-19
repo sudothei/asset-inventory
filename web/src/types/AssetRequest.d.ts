@@ -1,8 +1,4 @@
-import AssetRequest from "types/AssetRequest";
-interface Asset extends AssetRequest {
-  _id: {
-    $oid: string;
-  };
+interface AssetRequest {
   name: string;
   assetno: string;
   vendor: string;
@@ -15,4 +11,4 @@ interface Asset extends AssetRequest {
   serialno?: string | null;
   notes?: string | null;
 }
-export default Asset;
+export default AssetRequest;
