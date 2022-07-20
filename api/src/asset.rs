@@ -1,5 +1,5 @@
 use actix_web::web::Json;
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{get, post, put, web, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
 use std::sync::*;
@@ -68,25 +68,25 @@ pub async fn create(
                 .json(new_id)
         }
         Err(err) => {
-            println!("Failed! {}", err);
+            println!("{}", err);
             HttpResponse::InternalServerError().finish()
         }
     }
 }
 
-// find a asset by its id `/assets/{id}`
-//#[get("/assets/{id}")]
-//pub async fn get(path: Path<(String,)>) -> HttpResponse {
-//TODO find asset a asset by ID and return it
-//HttpResponse::Ok().content_type("application/json").json({})
-//}
-
-// delete a asset by its id `/assets/{id}`
-//#[delete("/assets/{id}")]
-//pub async fn delete(path: Path<(String,)>) -> HttpResponse {
-//TODO delete asset by ID
-//HttpResponse::NoContent()
-//.content_type("application/json")
-//.await
-//.unwrap()
-//}
+/// create a asset `/assets`
+#[put("/assets")]
+pub async fn update(data: web::Data<Mutex<Database>>, asset: Json<Asset>) -> impl Responder {
+    let db = data.lock().unwrap();
+    let asset_collection = db.collection::<Asset>("assets");
+    let filter = doc! { "_id": asset._id };
+    let data = doc! {"$set": bson::to_document(&asset).unwrap()};
+    let result = asset_collection.update_one(filter, data, None).await;
+    match result {
+        Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
+        Err(err) => {
+            println!("{}", err);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}

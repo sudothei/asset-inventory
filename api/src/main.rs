@@ -50,6 +50,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .service(asset::list)
             .service(asset::create)
+            .service(asset::update)
     })
     .bind(format!("0.0.0.0:{}", api_port))?
     .run()

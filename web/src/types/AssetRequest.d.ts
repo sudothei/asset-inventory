@@ -1,5 +1,6 @@
 import AssetRequired from "types/AssetRequired";
 interface AssetRequest extends AssetRequired {
+  oid?: string;
   subcategory?: string;
   sublocation?: string;
   description?: string;

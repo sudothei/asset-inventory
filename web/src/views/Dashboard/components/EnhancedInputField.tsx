@@ -2,32 +2,38 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Controller, Control } from "react-hook-form";
-import AssetRequest from "types/AssetRequest";
+import { Controller } from "react-hook-form";
 
 interface EnhancedInputFieldRequiredProps {
   label: string;
-  name: keyof AssetRequest;
-  control: Control<AssetRequest, object>;
+  name: string;
+  control: any;
 }
 interface EnhancedInputFieldOptionalProps {
-  type?: "number" | "text";
+  type?: "number" | "input";
   required?: boolean;
   multiline?: boolean;
   rules?: object;
+  readonly?: boolean;
 }
 interface EnhancedInputFieldProps
   extends EnhancedInputFieldRequiredProps,
     EnhancedInputFieldOptionalProps {}
 const defaultProps: EnhancedInputFieldOptionalProps = {
-  type: "text",
+  type: "input",
   required: false,
   multiline: false,
   rules: {},
+  readonly: false,
 };
 
 const EnhancedInputField = (props: EnhancedInputFieldProps) => {
-  const { name, required, label, type, control, multiline, rules } = props;
+  const { name, required, label, type, control, multiline, rules, readonly } =
+    props;
+
+  const id = `filled${readonly ? "-read-only" : ""}${"-" + type}`;
+  const labelText = readonly ? "Read Only" : required ? "Required" : "";
+
   return (
     <Controller
       name={name}
@@ -41,14 +47,17 @@ const EnhancedInputField = (props: EnhancedInputFieldProps) => {
         <Box className="form-field">
           <Typography>{`${label}:`}</Typography>
           <TextField
-            id={`filled=${type}`}
+            id={id}
             fullWidth
             multiline={multiline}
-            label={required ? "Required" : ""}
+            label={labelText}
             margin="dense"
             type={type}
             InputLabelProps={{
               shrink: true,
+            }}
+            InputProps={{
+              readOnly: readonly,
             }}
             variant="filled"
             helperText={error ? error.message : null}

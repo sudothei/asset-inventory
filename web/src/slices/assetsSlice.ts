@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import getAssets from "thunks/getAssets";
 import addAsset from "thunks/addAsset";
+import editAsset from "thunks/editAsset";
 import Asset from "types/Asset";
 
 const assetsSlice = createSlice({
@@ -17,6 +18,17 @@ const assetsSlice = createSlice({
         (state: Asset[], action: PayloadAction<Asset>) => {
           const newAsset: Asset = action.payload;
           const newState: Asset[] = [...state];
+          newState.push(newAsset);
+          return newState;
+        }
+      )
+      .addCase(
+        editAsset.fulfilled,
+        (state: Asset[], action: PayloadAction<Asset>) => {
+          const newAsset: Asset = action.payload;
+          const newState: Asset[] = [
+            ...state.filter((x) => x._id.$oid !== newAsset._id.$oid),
+          ];
           newState.push(newAsset);
           return newState;
         }
