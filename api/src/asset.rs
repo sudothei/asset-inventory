@@ -36,6 +36,17 @@ pub struct Asset {
     pub notes: Option<String>,
 }
 
+fn bad_input(err: mongodb::error::Error) -> String {
+    let err_msg = match *err.kind {
+        mongodb::error::ErrorKind::Write(err) => match err {
+            mongodb::error::WriteFailure::WriteError(e) => e.message,
+            _ => "Bad request".to_string(),
+        },
+        _ => "Bad request".to_string(),
+    };
+    return err_msg.to_string();
+}
+
 /// list all assets `/assets`
 #[get("/assets")]
 pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
@@ -68,25 +79,33 @@ pub async fn create(
                 .json(new_id)
         }
         Err(err) => {
-            println!("{}", err);
-            HttpResponse::InternalServerError().finish()
+            let mongo_err = bad_input(err);
+            HttpResponse::UnprocessableEntity()
+                .content_type("text")
+                .body(mongo_err)
         }
     }
 }
 
-/// create a asset `/assets`
-#[put("/assets")]
-pub async fn update(data: web::Data<Mutex<Database>>, asset: Json<Asset>) -> impl Responder {
+/// update a asset `/assets`
+#[put("/assets/{id}")]
+pub async fn update(
+    id: web::Path<String>,
+    data: web::Data<Mutex<Database>>,
+    asset: Json<Asset>,
+) -> impl Responder {
     let db = data.lock().unwrap();
     let asset_collection = db.collection::<Asset>("assets");
-    let filter = doc! { "_id": asset._id };
+    let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
     let data = doc! {"$set": bson::to_document(&asset).unwrap()};
     let result = asset_collection.update_one(filter, data, None).await;
     match result {
         Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
         Err(err) => {
-            println!("{}", err);
-            HttpResponse::InternalServerError().finish()
+            let mongo_err = bad_input(err);
+            HttpResponse::UnprocessableEntity()
+                .content_type("text")
+                .body(mongo_err)
         }
     }
 }

@@ -34,12 +34,18 @@ const AssetEditModal = (props: AssetEditModalProps) => {
     reset(defaultValues);
   }, [asset]);
 
+  const handleBackdropClick = () => {
+    defaultValues = { oid: asset ? asset._id.$oid : "", ...asset };
+    reset(defaultValues);
+    handleClose();
+  };
+
   return (
     <Modal
       open={open}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      onBackdropClick={handleClose}
+      onBackdropClick={handleBackdropClick}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
