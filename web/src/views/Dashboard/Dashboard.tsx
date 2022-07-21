@@ -17,6 +17,7 @@ import AssetEditModal from "./components/AssetEditModal";
 
 import getComparator from "helpers/getComparator";
 import getAssets from "thunks/getAssets";
+import deleteAssets from "thunks/deleteAssets";
 
 import Order from "types/Order";
 import Asset from "types/Asset";
@@ -62,6 +63,12 @@ const Dashboard = () => {
       }
     });
     return result;
+  };
+
+  // For deleting selected assets
+  const handleDelete = () => {
+    console.log(selected);
+    dispatch(deleteAssets(selected));
   };
 
   // For selecting assets
@@ -125,7 +132,7 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
-      <DashNav onSearch={handleSearch} />
+      <DashNav onDelete={handleDelete} onSearch={handleSearch} />
       <AssetEditModal
         open={editModalOpen}
         handleClose={() => setEditModalOpen(false)}

@@ -27,10 +27,11 @@ import { RootState } from "store";
 
 interface DashNavProps {
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDelete: () => void;
 }
 
 const DashNav = (props: DashNavProps) => {
-  const { onSearch } = props;
+  const { onSearch, onDelete } = props;
 
   // For the download as CSV button
   const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
@@ -73,6 +74,7 @@ const DashNav = (props: DashNavProps) => {
         anchorEl={deleteAnchorEl}
         open={open}
         onClose={handleDeleteClose}
+        onDelete={onDelete}
       />
       <Toolbar sx={{ flex: "1" }}>
         <Box
