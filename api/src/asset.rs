@@ -1,5 +1,5 @@
 use actix_web::web::Json;
-use actix_web::{get, post, put, web, HttpResponse, Responder};
+use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
 use std::sync::*;
@@ -62,7 +62,7 @@ pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
         .json(assets)
 }
 
-/// create a asset `/assets`
+/// create an asset `/assets`
 #[post("/assets")]
 pub async fn create(
     data: web::Data<Mutex<Database>>,
@@ -87,7 +87,7 @@ pub async fn create(
     }
 }
 
-/// update a asset `/assets`
+/// update an asset `/assets/{id}`
 #[put("/assets/{id}")]
 pub async fn update(
     id: web::Path<String>,
@@ -99,6 +99,24 @@ pub async fn update(
     let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
     let data = doc! {"$set": bson::to_document(&asset).unwrap()};
     let result = asset_collection.update_one(filter, data, None).await;
+    match result {
+        Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
+        Err(err) => {
+            let mongo_err = bad_input(err);
+            HttpResponse::UnprocessableEntity()
+                .content_type("text")
+                .body(mongo_err)
+        }
+    }
+}
+
+/// delete a asset `/assets/{id}`
+#[delete("/assets/{id}")]
+pub async fn delete(id: web::Path<String>, data: web::Data<Mutex<Database>>) -> impl Responder {
+    let db = data.lock().unwrap();
+    let asset_collection = db.collection::<Asset>("assets");
+    let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
+    let result = asset_collection.delete_one(filter, None).await;
     match result {
         Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
         Err(err) => {

@@ -171,7 +171,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             }}
           >
             <Button type="submit" variant="contained" color="secondary">
-              Add New
+              Update
             </Button>
           </Box>
         </Box>

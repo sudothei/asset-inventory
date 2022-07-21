@@ -48,9 +48,10 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(db.clone())
             .wrap(cors)
-            .service(asset::list)
             .service(asset::create)
+            .service(asset::list)
             .service(asset::update)
+            .service(asset::delete)
     })
     .bind(format!("0.0.0.0:{}", api_port))?
     .run()
