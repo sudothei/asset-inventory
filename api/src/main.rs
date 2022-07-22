@@ -54,6 +54,8 @@ async fn main() -> std::io::Result<()> {
             .service(asset::list)
             .service(asset::update)
             .service(asset::delete)
+            .service(user::create)
+            .service(user::list)
     })
     .bind(format!("0.0.0.0:{}", api_port))?
     .run()

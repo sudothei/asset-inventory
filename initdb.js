@@ -113,10 +113,10 @@ const userValidator = {
     additionalProperties: false,
     title: "user",
     required: [
-      "firstName",
-      "lastName",
+      "firstname",
+      "lastname",
       "username",
-      "passwordHash",
+      "password_hash",
       "permissions",
     ],
     properties: {
@@ -124,13 +124,13 @@ const userValidator = {
         bsonType: "objectId",
         description: "Automatically generated ObjectId",
       },
-      firstName: {
+      firstname: {
         bsonType: "string",
         minLength: 1,
         maxLength: 35,
         description: "Must be a string between 1 and 35 characters, required.",
       },
-      lastName: {
+      lastname: {
         bsonType: "string",
         minLength: 1,
         maxLength: 35,
@@ -142,7 +142,7 @@ const userValidator = {
         maxLength: 70,
         description: "Must be a string between 1 and 70 characters, required.",
       },
-      passwordHash: {
+      password_hash: {
         bsonType: "string",
         minLength: 12,
         maxLength: 255,

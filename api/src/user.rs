@@ -16,20 +16,28 @@ pub struct UserPermissions {
 #[derive(Serialize, Deserialize)]
 pub struct ExistingUser {
     pub _id: ObjectId,
-    pub firstName: String,
-    pub lastName: String,
+    pub firstname: String,
+    pub lastname: String,
     pub username: String,
     pub permissions: UserPermissions,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct UserRequest {
-    pub firstName: String,
-    pub lastName: String,
+    pub firstname: String,
+    pub lastname: String,
     pub username: String,
     pub password: String,
     pub permissions: UserPermissions,
-    pub passwordHash: Option<String>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UserInsert {
+    pub firstname: String,
+    pub lastname: String,
+    pub username: String,
+    pub permissions: UserPermissions,
+    pub password_hash: Option<String>,
 }
 
 /// list all users `/users`
@@ -56,7 +64,7 @@ pub async fn create(
     let db = data.lock().unwrap();
     let user_collection = db.collection("users");
 
-    let passwordHash = match bcrypt::hash(&user_req.password, 14) {
+    let password_hash = match bcrypt::hash(&user_req.password, 14) {
         Ok(hashed) => hashed,
         Err(e) => {
             return HttpResponse::InternalServerError()
@@ -65,19 +73,18 @@ pub async fn create(
         }
     };
 
-    let newUser = UserRequest {
+    let new_user = UserInsert {
         username: user_req.username.to_string(),
-        password: user_req.password.to_string(),
-        passwordHash: Some(passwordHash),
-        firstName: user_req.firstName.to_string(),
-        lastName: user_req.lastName.to_string(),
+        password_hash: Some(password_hash),
+        firstname: user_req.firstname.to_string(),
+        lastname: user_req.lastname.to_string(),
         permissions: UserPermissions {
             admin: user_req.permissions.admin,
             write: user_req.permissions.write,
         },
     };
 
-    let result = user_collection.insert_one(newUser, None).await;
+    let result = user_collection.insert_one(new_user, None).await;
     match result {
         Ok(rs) => {
             let new_id = rs.inserted_id.as_object_id();
