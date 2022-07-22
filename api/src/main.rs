@@ -5,6 +5,8 @@ use std::env;
 use std::sync::*;
 
 mod asset;
+mod helpers;
+mod user;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

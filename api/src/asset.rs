@@ -1,3 +1,4 @@
+use crate::helpers::bad_input;
 use actix_web::web::Json;
 use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
@@ -34,17 +35,6 @@ pub struct Asset {
     pub description: Option<String>,
     pub serialno: Option<String>,
     pub notes: Option<String>,
-}
-
-fn bad_input(err: mongodb::error::Error) -> String {
-    let err_msg = match *err.kind {
-        mongodb::error::ErrorKind::Write(err) => match err {
-            mongodb::error::WriteFailure::WriteError(e) => e.message,
-            _ => "Bad request".to_string(),
-        },
-        _ => "Bad request".to_string(),
-    };
-    return err_msg.to_string();
 }
 
 /// list all assets `/assets`

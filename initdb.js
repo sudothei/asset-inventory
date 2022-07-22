@@ -151,28 +151,16 @@ const userValidator = {
       },
       permissions: {
         bsonType: "object",
-        required: ["admin", "create", "read", "updated", "delete"],
+        required: ["admin", "write"],
         additionalProperties: false,
         properties: {
           admin: {
             bsonType: "bool",
             description: "Allows management of user accounts.",
           },
-          create: {
+          write: {
             bsonType: "bool",
             description: "Allows creation of new assets.",
-          },
-          read: {
-            bsonType: "bool",
-            description: "Allows reading of existing assets.",
-          },
-          update: {
-            bsonType: "bool",
-            description: "Allows updating existing assets.",
-          },
-          delete: {
-            bsonType: "bool",
-            description: "Allows deleting existing assets.",
           },
         },
       },
