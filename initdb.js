@@ -149,6 +149,19 @@ const userValidator = {
         description:
           "Must be a string between 12 and 255 characters, required.",
       },
+      status: {
+        bsonType: "string",
+        enum: ["Pending", "Active"],
+        description:
+          "Must be Active or Pending, used for account creation process, required.",
+      },
+      confirmation_code: {
+        bsonType: "string",
+        minLength: 6,
+        maxLength: 6,
+        description:
+          "Must be a string of 6 characters, used for account creation process, required.",
+      },
       permissions: {
         bsonType: "object",
         required: ["admin", "write"],

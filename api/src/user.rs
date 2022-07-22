@@ -1,6 +1,6 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
-use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
+use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
 use bcrypt;
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
@@ -23,7 +23,7 @@ pub struct ExistingUser {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct UserRequest {
+pub struct UserAddRequest {
     pub firstname: String,
     pub lastname: String,
     pub username: String,
@@ -38,6 +38,14 @@ pub struct UserInsert {
     pub username: String,
     pub permissions: UserPermissions,
     pub password_hash: Option<String>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UserEdit {
+    pub firstname: String,
+    pub lastname: String,
+    pub username: String,
+    pub permissions: UserPermissions,
 }
 
 /// list all users `/users`
@@ -59,7 +67,7 @@ pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
 #[post("/users")]
 pub async fn create(
     data: web::Data<Mutex<Database>>,
-    user_req: Json<UserRequest>,
+    user_req: Json<UserAddRequest>,
 ) -> impl Responder {
     let db = data.lock().unwrap();
     let user_collection = db.collection("users");
@@ -92,29 +100,6 @@ pub async fn create(
                 .content_type("application/json")
                 .json(new_id)
         }
-        Err(err) => {
-            let mongo_err = bad_input(err);
-            HttpResponse::UnprocessableEntity()
-                .content_type("text")
-                .body(mongo_err)
-        }
-    }
-}
-
-/// update a user `/users/{id}`
-#[put("/users/{id}")]
-pub async fn update(
-    id: web::Path<String>,
-    data: web::Data<Mutex<Database>>,
-    user: Json<UserRequest>,
-) -> impl Responder {
-    let db = data.lock().unwrap();
-    let user_collection = db.collection::<UserRequest>("users");
-    let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
-    let data = doc! {"$set": bson::to_document(&user).unwrap()};
-    let result = user_collection.update_one(filter, data, None).await;
-    match result {
-        Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
         Err(err) => {
             let mongo_err = bad_input(err);
             HttpResponse::UnprocessableEntity()
