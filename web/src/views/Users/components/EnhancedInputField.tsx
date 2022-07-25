@@ -42,7 +42,6 @@ const EnhancedInputField = (props: EnhancedInputFieldProps) => {
       render={({
         field: { onChange, value },
         fieldState: { error },
-        formState,
       }) => (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Typography sx={{minWidth: "15ch", textAlign: "enc", paddingRight: "1ch"}}>{`${label}:`}</Typography>

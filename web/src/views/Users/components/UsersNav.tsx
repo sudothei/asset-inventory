@@ -17,9 +17,9 @@ import Icon from "@mui/material/Icon";
 
 import { CSVLink } from "react-csv";
 
-import DashDrawer from "./DashDrawer";
-import AssetAddModal from "./AssetAddModal";
-import AssetDeleteMenu from "./AssetDeleteMenu";
+import UsersDrawer from "./UsersDrawer";
+import UserAddModal from "./UserAddModal";
+import UserDeleteMenu from "./UserDeleteMenu";
 
 import Asset from "types/Asset";
 import { RootState } from "store";
@@ -64,12 +64,12 @@ const DashNav = (props: DashNavProps) => {
 
   return (
     <AppBar position="fixed">
-      <DashDrawer open={drawerOpen} handleClick={toggleDrawer} />
-      <AssetAddModal
+      <UsersDrawer open={drawerOpen} handleClick={toggleDrawer} />
+      <UserAddModal
         open={assetAddModalOpen}
         handleClose={toggleAssetAddModal}
       />
-      <AssetDeleteMenu
+      <UserDeleteMenu
         anchorEl={deleteAnchorEl}
         open={open}
         onClose={handleDeleteClose}
@@ -95,7 +95,7 @@ const DashNav = (props: DashNavProps) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ alignSelf: "center" }}>
-            Inventory Asset DB
+            Users
           </Typography>
         </Box>
         <Box

@@ -38,7 +38,7 @@ pub struct Asset {
 }
 
 /// list all assets `/assets`
-#[get("/assets")]
+#[get("/api/assets")]
 pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
     let db = data.lock().unwrap();
     let asset_collection = db.collection::<Asset>("assets");
@@ -53,7 +53,7 @@ pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
 }
 
 /// create an asset `/assets`
-#[post("/assets")]
+#[post("/api/assets")]
 pub async fn create(
     data: web::Data<Mutex<Database>>,
     asset_req: Json<AssetRequest>,
@@ -78,7 +78,7 @@ pub async fn create(
 }
 
 /// update an asset `/assets/{id}`
-#[put("/assets/{id}")]
+#[put("/api/assets/{id}")]
 pub async fn update(
     id: web::Path<String>,
     data: web::Data<Mutex<Database>>,
@@ -101,7 +101,7 @@ pub async fn update(
 }
 
 /// delete a asset `/assets/{id}`
-#[delete("/assets/{id}")]
+#[delete("/api/assets/{id}")]
 pub async fn delete(id: web::Path<String>, data: web::Data<Mutex<Database>>) -> impl Responder {
     let db = data.lock().unwrap();
     let asset_collection = db.collection::<Asset>("assets");

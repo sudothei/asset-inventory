@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material/";
 
 import Dashboard from "./views/Dashboard/Dashboard";
+import Users from "./views/Users/Users";
 import theme from "./theme";
 import "index.css";
 import store from "./store";
@@ -22,6 +23,7 @@ root.render(
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Dashboard />}></Route>
+            <Route path="/users" element={<Users />}></Route>
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

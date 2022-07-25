@@ -13,10 +13,7 @@ const descendingComparator = <Type>(a: Type, b: Type, orderBy: keyof Type) => {
 const getComparator = <Key extends keyof any>(
   order: Order,
   orderBy: Key
-): ((
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number) => {
+): ((a: { [key in Key]: any }, b: { [key in Key]: any }) => number) => {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);

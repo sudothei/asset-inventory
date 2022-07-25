@@ -16,6 +16,7 @@ module.exports = (env) => {
     output: {
       path: path.resolve(__dirname, "build"),
       filename: "bundle.js",
+      publicPath: "/",
     },
     resolve: {
       modules: [path.join(__dirname, "src"), "node_modules"],
@@ -36,6 +37,9 @@ module.exports = (env) => {
           use: [{ loader: "style-loader" }, { loader: "css-loader" }],
         },
       ],
+    },
+    devServer: {
+      historyApiFallback: true,
     },
     plugins: [
       new HtmlWebPackPlugin({

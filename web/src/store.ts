@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import assetsReducer from "slices/assetsSlice";
+import usersReducer from "slices/usersSlice";
 
 const store = configureStore({
   reducer: {
     assets: assetsReducer,
+    users: usersReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

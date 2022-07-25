@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -8,8 +9,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import GroupIcon from "@mui/icons-material/Group";
+import CategoryIcon from "@mui/icons-material/Category";
 import LogoutIcon from "@mui/icons-material/Logout";
+
+import UserAddModal from "./UserAddModal";
 
 interface DashDrawerProps {
   open: boolean;
@@ -20,6 +25,11 @@ const DashDrawer = (props: DashDrawerProps) => {
   const { open, handleClick } = props;
 
   // For the user add modal
+  const [userAddModalOpen, setUserAddModalOpen] = useState(false);
+  const toggleUserAddModal = () => {
+    setUserAddModalOpen((userAddModalOpen) => !userAddModalOpen);
+  };
+
   return (
     <Drawer
       sx={{
@@ -35,14 +45,31 @@ const DashDrawer = (props: DashDrawerProps) => {
       open={open}
       onClose={handleClick}
     >
+      <UserAddModal open={userAddModalOpen} handleClose={toggleUserAddModal} />
+      <Divider />
       <List>
-        <ListItem key={"Add User"} disablePadding></ListItem>
+        <ListItem key={"Assets"} disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <CategoryIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Assets"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={"Add User"} disablePadding>
+          <ListItemButton onClick={toggleUserAddModal}>
+            <ListItemIcon>
+              <PersonAddIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Add User"} />
+          </ListItemButton>
+        </ListItem>
         <ListItem key={"Manage Users"} disablePadding>
-          <ListItemButton href="/users">
+          <ListItemButton>
             <ListItemIcon>
               <GroupIcon />
             </ListItemIcon>
-            <ListItemText primary={"Users"} />
+            <ListItemText primary={"Manage Users"} />
           </ListItemButton>
         </ListItem>
       </List>

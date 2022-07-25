@@ -112,13 +112,7 @@ const userValidator = {
     bsonType: "object",
     additionalProperties: false,
     title: "user",
-    required: [
-      "firstname",
-      "lastname",
-      "username",
-      "password_hash",
-      "permissions",
-    ],
+    required: ["firstname", "lastname", "email", "status", "permissions"],
     properties: {
       _id: {
         bsonType: "objectId",
@@ -136,18 +130,17 @@ const userValidator = {
         maxLength: 35,
         description: "Must be a string between 1 and 35 characters, required.",
       },
-      username: {
+      email: {
         bsonType: "string",
-        minLength: 1,
+        minLength: 5,
         maxLength: 70,
-        description: "Must be a string between 1 and 70 characters, required.",
+        description: "Must be a string between 5 and 70 characters, required.",
       },
       password_hash: {
         bsonType: "string",
         minLength: 12,
         maxLength: 255,
-        description:
-          "Must be a string between 12 and 255 characters, required.",
+        description: "Must be a string between 12 and 255 characters.",
       },
       status: {
         bsonType: "string",
@@ -155,12 +148,25 @@ const userValidator = {
         description:
           "Must be Active or Pending, used for account creation process, required.",
       },
-      confirmation_code: {
-        bsonType: "string",
-        minLength: 6,
-        maxLength: 6,
-        description:
-          "Must be a string of 6 characters, used for account creation process, required.",
+      security_token: {
+        bsonType: "object",
+        required: ["token", "expires"],
+        additionalProperties: "false",
+        properties: {
+          token: {
+            bsonType: "string",
+            minLength: 32,
+            maxLength: 32,
+            description:
+              "A 32 char hex string for account creation and password reset emails.",
+          },
+          expires: {
+            bsonType: "string",
+            bsonType: number,
+            description:
+              "A 13 digit Unix epoch timestamp for when the token is no longer valid.",
+          },
+        },
       },
       permissions: {
         bsonType: "object",

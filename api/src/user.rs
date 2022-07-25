@@ -1,6 +1,6 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
-use actix_web::{delete, get, patch, post, web, HttpResponse, Responder};
+use actix_web::{delete, get, post, web, HttpResponse, Responder};
 use bcrypt;
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
@@ -18,38 +18,33 @@ pub struct ExistingUser {
     pub _id: ObjectId,
     pub firstname: String,
     pub lastname: String,
-    pub username: String,
-    pub permissions: UserPermissions,
+    pub email: String,
+    pub admin: bool,
+    pub write: bool,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct UserAddRequest {
     pub firstname: String,
     pub lastname: String,
-    pub username: String,
+    pub email: String,
     pub password: String,
-    pub permissions: UserPermissions,
+    pub admin: bool,
+    pub write: bool,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct UserInsert {
     pub firstname: String,
     pub lastname: String,
-    pub username: String,
-    pub permissions: UserPermissions,
+    pub email: String,
+    pub admin: bool,
+    pub write: bool,
     pub password_hash: Option<String>,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct UserEdit {
-    pub firstname: String,
-    pub lastname: String,
-    pub username: String,
-    pub permissions: UserPermissions,
-}
-
 /// list all users `/users`
-#[get("/users")]
+#[get("/api/users")]
 pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
     let db = data.lock().unwrap();
     let user_collection = db.collection::<ExistingUser>("users");
@@ -64,7 +59,7 @@ pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
 }
 
 /// create a user `/users`
-#[post("/users")]
+#[post("/api/users")]
 pub async fn create(
     data: web::Data<Mutex<Database>>,
     user_req: Json<UserAddRequest>,
@@ -82,7 +77,7 @@ pub async fn create(
     };
 
     let new_user = UserInsert {
-        username: user_req.username.to_string(),
+        email: user_req.email.to_string(),
         password_hash: Some(password_hash),
         firstname: user_req.firstname.to_string(),
         lastname: user_req.lastname.to_string(),
@@ -110,7 +105,7 @@ pub async fn create(
 }
 
 /// delete a user `/users/{id}`
-#[delete("/users/{id}")]
+#[delete("/api/users/{id}")]
 pub async fn delete(id: web::Path<String>, data: web::Data<Mutex<Database>>) -> impl Responder {
     let db = data.lock().unwrap();
     let user_collection = db.collection::<ExistingUser>("users");

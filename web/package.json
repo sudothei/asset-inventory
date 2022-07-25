@@ -2,7 +2,7 @@
   "name": "cromulon",
   "version": "1.0.0",
   "description": "Inventory asset DB",
-  "main": "index.js",
+  "main": "index.tsx",
   "scripts": {
     "test": "yarn test",
     "start": "webpack-dev-server --env API_HOSTNAME=$API_HOSTNAME --env API_PORT=$API_PORT --mode=development --open --hot",
