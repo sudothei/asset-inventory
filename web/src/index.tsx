@@ -6,8 +6,9 @@ import { Provider } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material/";
 
-import Dashboard from "./views/Dashboard/Dashboard";
+import Assets from "./views/Assets/Assets";
 import Users from "./views/Users/Users";
+import SignUp from "./views/SignUp/SignUp";
 import theme from "./theme";
 import "index.css";
 import store from "./store";
@@ -22,8 +23,9 @@ root.render(
         <CssBaseline />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Dashboard />}></Route>
+            <Route path="/" element={<Assets />}></Route>
             <Route path="/users" element={<Users />}></Route>
+            <Route path="/signup" element={<SignUp />}></Route>
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

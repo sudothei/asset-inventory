@@ -11,12 +11,12 @@ import ListItemText from "@mui/material/ListItemText";
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-interface DashDrawerProps {
+interface AssetDrawerProps {
   open: boolean;
   handleClick: () => void;
 }
 
-const DashDrawer = (props: DashDrawerProps) => {
+const AssetDrawer = (props: AssetDrawerProps) => {
   const { open, handleClick } = props;
 
   // For the user add modal
@@ -60,4 +60,4 @@ const DashDrawer = (props: DashDrawerProps) => {
     </Drawer>
   );
 };
-export default DashDrawer;
+export default AssetDrawer;

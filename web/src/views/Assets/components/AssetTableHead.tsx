@@ -16,7 +16,7 @@ interface Column {
   label: string;
   align?: "right";
 }
-interface EnhancedTableProps {
+interface AssetTableProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
@@ -37,7 +37,7 @@ const columns: readonly Column[] = [
   { id: "location", label: "Location", align: "right" },
 ];
 
-const EnhancedTableHead = (props: EnhancedTableProps) => {
+const AssetTableHead = (props: AssetTableProps) => {
   const {
     onSelectAllClick,
     order,
@@ -89,4 +89,4 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
     </TableHead>
   );
 };
-export default EnhancedTableHead;
+export default AssetTableHead;

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useEffect } from "react";
 import { useAppDispatch } from "hooks";
 import { useForm } from "react-hook-form";
 
@@ -7,37 +6,45 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 
-import EnhancedInputField from "./EnhancedInputField";
-import Asset from "types/Asset";
-import editAsset from "thunks/editAsset";
+import EnhancedInputField from "components/EnhancedInputField";
+import AssetRequest from "types/AssetRequest";
+import addAsset from "thunks/addAsset";
 
-interface AssetEditModalProps {
+interface AssetAddModalProps {
   open: boolean;
   handleClose: () => void;
-  asset: Asset | undefined;
 }
 
-const AssetEditModal = (props: AssetEditModalProps) => {
-  const { open, handleClose, asset } = props;
+const AssetAddModal = (props: AssetAddModalProps) => {
+  const { open, handleClose } = props;
+
+  const defaultValues = {
+    name: "",
+    assetno: "",
+    vendor: "",
+    category: "",
+    subcategory: "",
+    count: 1,
+    location: "",
+    sublocation: "",
+    description: "",
+    serialno: "",
+    notes: "",
+  };
 
   const dispatch = useAppDispatch();
-  let defaultValues = {};
-  const methods = useForm<Asset>({ defaultValues: defaultValues });
+
+  const methods = useForm<AssetRequest>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control } = methods;
-  const onSubmit = (data: Asset) => {
-    dispatch(editAsset(data));
+  const onSubmit = (data: AssetRequest) => {
+    dispatch(addAsset(data));
+    reset();
     handleClose();
   };
 
-  useEffect(() => {
-    defaultValues = { oid: asset ? asset._id.$oid : "", ...asset };
-    reset(defaultValues);
-  }, [asset]);
-
   const handleBackdropClick = () => {
-    defaultValues = { oid: asset ? asset._id.$oid : "", ...asset };
-    reset(defaultValues);
     handleClose();
+    reset();
   };
 
   return (
@@ -62,18 +69,6 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             "& .MuiTextField-root": { maxWidth: "50ch" },
           }}
         >
-          <EnhancedInputField
-            name="oid"
-            label="Object Id"
-            required={true}
-            readonly={true}
-            rules={{
-              required: { value: true, message: "Required" },
-              minLength: 1,
-              maxLength: { value: 255, message: "Maximum 255" },
-            }}
-            control={control}
-          />
           <EnhancedInputField
             name="name"
             label="Name"
@@ -171,7 +166,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             }}
           >
             <Button type="submit" variant="contained" color="secondary">
-              Update
+              Add New
             </Button>
           </Box>
         </Box>
@@ -179,4 +174,4 @@ const AssetEditModal = (props: AssetEditModalProps) => {
     </Modal>
   );
 };
-export default AssetEditModal;
+export default AssetAddModal;

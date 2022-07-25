@@ -4,9 +4,10 @@
     "rootDir": ".",
     "outDir": "dist",
     "paths": {
-      "thunks/*": ["thunks/*"],
+      "components/*": ["components/*"],
       "helpers/*": ["helpers/*"],
       "slices/*": ["slices/*"],
+      "thunks/*": ["thunks/*"],
       "types/*": ["types/*"]
     },
     "module": "esnext",

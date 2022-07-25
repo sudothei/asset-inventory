@@ -11,8 +11,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
-import EnhancedTableHead from "./components/EnhancedTableHead";
-import DashNav from "./components/DashNav";
+import EnhancedTableHead from "./components/AssetTableHead";
+import AssetNav from "./components/AssetNav";
 import AssetEditModal from "./components/AssetEditModal";
 
 import getComparator from "helpers/getComparator";
@@ -24,7 +24,7 @@ import Asset from "types/Asset";
 import AssetRequired from "types/AssetRequired";
 import { RootState } from "store";
 
-const Dashboard = () => {
+const Assets = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -132,7 +132,7 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
-      <DashNav onDelete={handleDelete} onSearch={handleSearch} />
+      <AssetNav onDelete={handleDelete} onSearch={handleSearch} />
       <AssetEditModal
         open={editModalOpen}
         handleClose={() => setEditModalOpen(false)}
@@ -204,4 +204,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Assets;

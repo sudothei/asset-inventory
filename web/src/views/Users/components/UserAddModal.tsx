@@ -6,8 +6,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 
-import EnhancedInputField from "./EnhancedInputField";
-import EnhancedSwitch from "./EnhancedSwitch";
+import EnhancedInputField from "components/EnhancedInputField";
+import EnhancedSwitch from "components/EnhancedSwitch";
 import UserRequest from "types/UserRequest";
 import addUser from "thunks/addUser";
 

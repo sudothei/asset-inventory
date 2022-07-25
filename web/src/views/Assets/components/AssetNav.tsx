@@ -17,19 +17,19 @@ import Icon from "@mui/material/Icon";
 
 import { CSVLink } from "react-csv";
 
-import DashDrawer from "./DashDrawer";
+import AssetDrawer from "./AssetDrawer";
 import AssetAddModal from "./AssetAddModal";
 import AssetDeleteMenu from "./AssetDeleteMenu";
 
 import Asset from "types/Asset";
 import { RootState } from "store";
 
-interface DashNavProps {
+interface AssetNavProps {
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onDelete: () => void;
 }
 
-const DashNav = (props: DashNavProps) => {
+const AssetNav = (props: AssetNavProps) => {
   const { onSearch, onDelete } = props;
 
   // For the download as CSV button
@@ -64,7 +64,7 @@ const DashNav = (props: DashNavProps) => {
 
   return (
     <AppBar position="fixed">
-      <DashDrawer open={drawerOpen} handleClick={toggleDrawer} />
+      <AssetDrawer open={drawerOpen} handleClick={toggleDrawer} />
       <AssetAddModal
         open={assetAddModalOpen}
         handleClose={toggleAssetAddModal}
@@ -140,4 +140,4 @@ const DashNav = (props: DashNavProps) => {
     </AppBar>
   );
 };
-export default DashNav;
+export default AssetNav;

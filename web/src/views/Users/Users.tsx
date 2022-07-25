@@ -11,7 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
-import EnhancedTableHead from "./components/EnhancedTableHead";
+import UsersTableHead from "./components/UsersTableHead";
 import UsersNav from "./components/UsersNav";
 //import UserEditModal from "./components/UserEditModal";
 
@@ -141,7 +141,7 @@ const Dashboard = () => {
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: tableHeight, overflow: "auto" }}>
           <Table stickyHeader aria-label="sticky table" size="small">
-            <EnhancedTableHead
+            <UsersTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
