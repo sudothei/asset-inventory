@@ -1,16 +1,18 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
 use actix_web::{delete, get, post, web, HttpResponse, Responder};
-use bcrypt;
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
+use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
 use std::sync::*;
+use std::time::{SystemTime, UNIX_EPOCH};
 use tokio_stream::StreamExt;
 
 #[derive(Serialize, Deserialize)]
-pub struct UserPermissions {
-    pub write: bool,
-    pub admin: bool,
+pub struct SecurityToken {
+    pub token: String,
+    pub expires: u64,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -28,19 +30,10 @@ pub struct UserAddRequest {
     pub firstname: String,
     pub lastname: String,
     pub email: String,
-    pub password: String,
     pub admin: bool,
     pub write: bool,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserInsert {
-    pub firstname: String,
-    pub lastname: String,
-    pub email: String,
-    pub admin: bool,
-    pub write: bool,
-    pub password_hash: Option<String>,
+    pub status: Option<String>,
+    pub security_token: Option<SecurityToken>,
 }
 
 /// list all users `/users`
@@ -67,24 +60,27 @@ pub async fn create(
     let db = data.lock().unwrap();
     let user_collection = db.collection("users");
 
-    let password_hash = match bcrypt::hash(&user_req.password, 14) {
-        Ok(hashed) => hashed,
-        Err(e) => {
-            return HttpResponse::InternalServerError()
-                .content_type("text")
-                .body(e.to_string())
-        }
+    let start = SystemTime::now();
+    let since_the_epoch = start
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards");
+    let expires = since_the_epoch.as_secs() + (60 * 60 * 24 * 7);
+
+    let token: String = thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(30)
+        .map(char::from)
+        .collect();
+
+    let security_token = SecurityToken {
+        token: token,
+        expires: expires,
     };
 
-    let new_user = UserInsert {
-        email: user_req.email.to_string(),
-        password_hash: Some(password_hash),
-        firstname: user_req.firstname.to_string(),
-        lastname: user_req.lastname.to_string(),
-        permissions: UserPermissions {
-            admin: user_req.permissions.admin,
-            write: user_req.permissions.write,
-        },
+    let new_user = UserAddRequest {
+        status: Some("Pending".to_string()),
+        security_token: Some(security_token),
+        ..user_req.into_inner()
     };
 
     let result = user_collection.insert_one(new_user, None).await;

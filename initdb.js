@@ -112,7 +112,15 @@ const userValidator = {
     bsonType: "object",
     additionalProperties: false,
     title: "user",
-    required: ["firstname", "lastname", "email", "status", "permissions"],
+    required: [
+      "firstname",
+      "lastname",
+      "email",
+      "status",
+      "admin",
+      "write",
+      "security_token",
+    ],
     properties: {
       _id: {
         bsonType: "objectId",
@@ -151,7 +159,7 @@ const userValidator = {
       security_token: {
         bsonType: "object",
         required: ["token", "expires"],
-        additionalProperties: "false",
+        additionalProperties: false,
         properties: {
           token: {
             bsonType: "string",
@@ -161,27 +169,19 @@ const userValidator = {
               "A 32 char hex string for account creation and password reset emails.",
           },
           expires: {
-            bsonType: "string",
-            bsonType: number,
+            bsonType: "number",
             description:
               "A 13 digit Unix epoch timestamp for when the token is no longer valid.",
           },
         },
       },
-      permissions: {
-        bsonType: "object",
-        required: ["admin", "write"],
-        additionalProperties: false,
-        properties: {
-          admin: {
-            bsonType: "bool",
-            description: "Allows management of user accounts.",
-          },
-          write: {
-            bsonType: "bool",
-            description: "Allows creation of new assets.",
-          },
-        },
+      admin: {
+        bsonType: "bool",
+        description: "Allows management of user accounts.",
+      },
+      write: {
+        bsonType: "bool",
+        description: "Allows creation of new assets.",
       },
     },
   },

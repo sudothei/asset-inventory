@@ -248,6 +248,7 @@ dependencies = [
  "futures",
  "jwt",
  "mongodb",
+ "rand",
  "serde",
  "tokio-stream",
 ]
