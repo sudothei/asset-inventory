@@ -1,10 +1,12 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
 use actix_web::{delete, get, post, web, HttpResponse, Responder};
+use lettre::{AsyncSendmailTransport, AsyncTransport, Message, SendmailTransport, Tokio1Executor};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
+use std::env;
 use std::sync::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tokio_stream::StreamExt;
@@ -73,7 +75,7 @@ pub async fn create(
         .collect();
 
     let security_token = SecurityToken {
-        token: token,
+        token: token.clone(),
         expires: expires,
     };
 
@@ -82,6 +84,21 @@ pub async fn create(
         security_token: Some(security_token),
         ..user_req.into_inner()
     };
+
+    let smtp_from: String = env::var("SMTP_FROM").expect("SMTP_FROM must be set");
+    let smtp_server: String = env::var("SMTP_SERVER").expect("SMTP_SERVER must be set");
+    let server_hostname: String = env::var("SERVER_HOSTNAME").expect("SERVER_HOSTNAME must be set");
+    let body: String = format!(
+        r#"
+            <p>Please set your password using the following link.</p>
+            <a =href="https://{hostname}/setpassword/{token}">https://{hostname}/setpassword/{token}</a>
+            <p>This link will expire in 7 days</p>
+        "#,
+        hostname = server_hostname,
+        token = token
+    );
+
+    // TODO lettre email logic
 
     let result = user_collection.insert_one(new_user, None).await;
     match result {

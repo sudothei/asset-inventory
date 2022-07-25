@@ -17,5 +17,12 @@ DATABASE_USERNAME=inventoryAssetDB
 # also change in initdb.js
 DATABASE_PASSWORD=changeme
 
-API_HOSTNAME=localhost
+# for the apps to build non-relative urls
+SERVER_HOSTNAME=localhost
+
+# in case the api should be served on a different port
 API_PORT=80
+
+# used for account verification and password resets
+SMTP_FROM=cromulon@charter.com
+SMTP_SERVER=mail.chtrse.com
