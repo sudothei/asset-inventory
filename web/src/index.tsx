@@ -8,7 +8,7 @@ import { CssBaseline } from "@mui/material/";
 
 import Assets from "./views/Assets/Assets";
 import Users from "./views/Users/Users";
-import SignUp from "./views/SignUp/SignUp";
+import SetPassword from "./views/SetPassword/SetPassword";
 import theme from "./theme";
 import "index.css";
 import store from "./store";
@@ -25,7 +25,7 @@ root.render(
           <Routes>
             <Route path="/" element={<Assets />}></Route>
             <Route path="/users" element={<Users />}></Route>
-            <Route path="/signup" element={<SignUp />}></Route>
+            <Route path="/setpassword" element={<SetPassword />}></Route>
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

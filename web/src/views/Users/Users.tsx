@@ -13,7 +13,7 @@ import Box from "@mui/material/Box";
 
 import UsersTableHead from "./components/UsersTableHead";
 import UsersNav from "./components/UsersNav";
-//import UserEditModal from "./components/UserEditModal";
+import UserEditModal from "./components/UserEditModal";
 
 import getComparator from "helpers/getComparator";
 import getUsers from "thunks/getUsers";
@@ -28,7 +28,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(getUsers());
-  }, [dispatch]);
+  }, []);
 
   const users: User[] = useAppSelector((state: RootState) => state.users);
 
@@ -132,12 +132,11 @@ const Dashboard = () => {
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
       <UsersNav onDelete={handleDelete} onSearch={handleSearch} />
-      {/*
-       *<UserEditModal
-       *  open={editModalOpen}
-       *  handleClose={() => setEditModalOpen(false)}
-       *  user={currentUser} />
-       */}
+      <UserEditModal
+        open={editModalOpen}
+        handleClose={() => setEditModalOpen(false)}
+        user={currentUser}
+      />
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: tableHeight, overflow: "auto" }}>
           <Table stickyHeader aria-label="sticky table" size="small">

@@ -8,6 +8,7 @@ import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 
 import EnhancedInputField from "components/EnhancedInputField";
+import EnhancedSwitch from "components/EnhancedSwitch";
 import User from "types/User";
 import editUser from "thunks/editUser";
 
@@ -65,104 +66,35 @@ const UserEditModal = (props: UserEditModalProps) => {
           <EnhancedInputField
             name="oid"
             label="Object Id"
-            required={true}
             readonly={true}
-            rules={{
-              required: { value: true, message: "Required" },
-              minLength: 1,
-              maxLength: { value: 255, message: "Maximum 255" },
-            }}
             control={control}
           />
           <EnhancedInputField
-            name="name"
-            label="Name"
-            required={true}
-            rules={{
-              required: { value: true, message: "Required" },
-              minLength: 1,
-              maxLength: { value: 255, message: "Maximum 255" },
-            }}
+            name="firstname"
+            label="First Name"
+            readonly={true}
             control={control}
           />
           <EnhancedInputField
-            name="userno"
-            label="User No"
-            required={true}
-            rules={{
-              required: { value: true, message: "Required" },
-              minLength: 1,
-              maxLength: { value: 255, message: "Maximum 255" },
-            }}
+            name="lastname"
+            label="Last Name"
+            readonly={true}
             control={control}
           />
           <EnhancedInputField
-            name="vendor"
-            label="Vendor"
-            required={true}
-            rules={{
-              required: { value: true, message: "Required" },
-              minLength: 1,
-              maxLength: { value: 255, message: "Maximum 255" },
-            }}
+            name="email"
+            label="Email"
+            readonly={true}
             control={control}
           />
           <EnhancedInputField
-            name="category"
-            label="Category"
-            required={true}
-            rules={{
-              required: { value: true, message: "Required" },
-              minLength: 1,
-              maxLength: { value: 255, message: "Maximum 255" },
-            }}
+            name="status"
+            label="Status"
+            readonly={true}
             control={control}
           />
-          <EnhancedInputField
-            name="subcategory"
-            label="Subcategory"
-            rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
-            control={control}
-          />
-          <EnhancedInputField
-            name="count"
-            label="Count"
-            type="number"
-            required={true}
-            rules={{ required: { value: true, message: "Required" }, min: 1 }}
-            control={control}
-          />
-          <EnhancedInputField
-            name="location"
-            label="Location"
-            required={true}
-            rules={{
-              required: { value: true, message: "Required" },
-              minLength: 1,
-              maxLength: { value: 255, message: "Maximum 255" },
-            }}
-            control={control}
-          />
-          <EnhancedInputField
-            name="sublocation"
-            label="Sublocation"
-            rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
-            control={control}
-          />
-          <EnhancedInputField
-            name="serialno"
-            label="Serial No"
-            rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
-            control={control}
-          />
-          <EnhancedInputField name="notes" label="Notes" control={control} />
-          <EnhancedInputField
-            name="description"
-            label="Description"
-            multiline={true}
-            rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
-            control={control}
-          />
+          <EnhancedSwitch name="admin" label="Admin" control={control} />
+          <EnhancedSwitch name="write" label="Write Access" control={control} />
           <Box
             sx={{
               display: "flex",

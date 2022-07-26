@@ -29,7 +29,7 @@ const Assets = () => {
 
   useEffect(() => {
     dispatch(getAssets());
-  }, [dispatch]);
+  }, []);
 
   const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
 
