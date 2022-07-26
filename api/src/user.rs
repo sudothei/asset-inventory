@@ -1,7 +1,8 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
 use actix_web::{delete, get, post, web, HttpResponse, Responder};
-use lettre::{AsyncSendmailTransport, AsyncTransport, Message, SendmailTransport, Tokio1Executor};
+use lettre::message::{header::ContentType, Mailbox, SinglePartBuilder};
+use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
@@ -87,6 +88,7 @@ pub async fn create(
 
     let smtp_from: String = env::var("SMTP_FROM").expect("SMTP_FROM must be set");
     let smtp_server: String = env::var("SMTP_SERVER").expect("SMTP_SERVER must be set");
+    let smtp_use_tls: String = env::var("SMTP_USE_TLS").expect("SMTP_USE_TLS must be set");
     let server_hostname: String = env::var("SERVER_HOSTNAME").expect("SERVER_HOSTNAME must be set");
     let body: String = format!(
         r#"
@@ -98,7 +100,33 @@ pub async fn create(
         token = token
     );
 
-    // TODO lettre email logic
+    let email = Message::builder()
+        .from(Mailbox::new(None, smtp_from.parse().unwrap()))
+        .to(Mailbox::new(None, new_user.email.clone().parse().unwrap()))
+        .subject("Set your password using this link")
+        .singlepart(
+            SinglePartBuilder::new()
+                .content_type(ContentType::TEXT_HTML)
+                .body(body),
+        )
+        .unwrap();
+
+    let mailer: lettre::AsyncSmtpTransport<_>;
+    if smtp_use_tls == "Y" {
+        mailer = AsyncSmtpTransport::<Tokio1Executor>::starttls_relay(&smtp_server)
+            .unwrap()
+            .build();
+    } else {
+        mailer = AsyncSmtpTransport::<Tokio1Executor>::builder_dangerous(&smtp_server)
+            .port(25)
+            .build();
+    }
+
+    let mail_result = mailer.send(email).await;
+    match mail_result {
+        Ok(rs) => println!("{:?}", rs),
+        Err(err) => println!("{:?}", err),
+    }
 
     let result = user_collection.insert_one(new_user, None).await;
     match result {

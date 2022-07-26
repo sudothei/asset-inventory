@@ -968,10 +968,12 @@ version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2eabca5e0b4d0e98e7f2243fb5b7520b6af2b65d8f87bcc86f2c75185a6ff243"
 dependencies = [
+ "async-trait",
  "base64",
  "email-encoding",
  "email_address",
  "fastrand",
+ "futures-io",
  "futures-util",
  "hostname",
  "httpdate",
@@ -982,6 +984,8 @@ dependencies = [
  "once_cell",
  "quoted_printable",
  "socket2",
+ "tokio",
+ "tokio-native-tls",
 ]
 
 [[package]]
@@ -1879,6 +1883,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "tokio-native-tls"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7d995660bd2b7f8c1568414c1126076c13fbb725c40112dc0120b78eb9b717b"
+dependencies = [
+ "native-tls",
+ "tokio",
 ]
 
 [[package]]

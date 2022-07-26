@@ -26,3 +26,4 @@ API_PORT=80
 # used for account verification and password resets
 SMTP_FROM=cromulon@charter.com
 SMTP_SERVER=mail.chtrse.com
+SMTP_USE_TLS=N
