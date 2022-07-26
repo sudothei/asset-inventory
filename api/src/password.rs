@@ -43,7 +43,7 @@ pub async fn request_email(
     let expires = since_the_epoch.as_secs() + (60 * 60 * 24 * 7);
     let token: String = thread_rng()
         .sample_iter(&Alphanumeric)
-        .take(30)
+        .take(32)
         .map(char::from)
         .collect();
     let security_token = SecurityToken {
@@ -123,7 +123,7 @@ pub async fn request_email(
         Ok(_rs) => HttpResponse::Ok()
             .content_type("application/json")
             .json("Success"),
-        Err(err) => HttpResponse::UnprocessableEntity()
+        Err(err) => HttpResponse::InternalServerError()
             .content_type("text")
             .body(err.to_string()),
     }

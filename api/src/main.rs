@@ -57,6 +57,7 @@ async fn main() -> std::io::Result<()> {
             .service(asset::delete)
             .service(user::create)
             .service(user::list)
+            .service(user::update)
             .service(user::delete)
             .service(password::request_email)
     })

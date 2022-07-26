@@ -1,6 +1,6 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
-use actix_web::{delete, get, post, web, HttpResponse, Responder};
+use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
 use std::sync::*;
@@ -34,6 +34,12 @@ pub struct UserInsert {
     pub admin: bool,
     pub write: bool,
     pub status: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UserPermissions {
+    pub admin: bool,
+    pub write: bool,
 }
 
 /// list all users `/api/users`
@@ -93,6 +99,29 @@ pub async fn delete(id: web::Path<String>, data: web::Data<Mutex<Database>>) -> 
     let user_collection = db.collection::<ExistingUser>("users");
     let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
     let result = user_collection.delete_one(filter, None).await;
+    match result {
+        Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
+        Err(err) => {
+            let mongo_err = bad_input(err);
+            HttpResponse::UnprocessableEntity()
+                .content_type("text")
+                .body(mongo_err)
+        }
+    }
+}
+
+/// update a users permissions `/api/users/{id}`
+#[put("/api/users/{id}")]
+pub async fn update(
+    id: web::Path<String>,
+    data: web::Data<Mutex<Database>>,
+    user_perms: Json<UserPermissions>,
+) -> impl Responder {
+    let db = data.lock().unwrap();
+    let user_collection = db.collection::<UserPermissions>("users");
+    let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
+    let data = doc! {"$set": bson::to_document(&user_perms).unwrap()};
+    let result = user_collection.update_one(filter, data, None).await;
     match result {
         Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
         Err(err) => {
