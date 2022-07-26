@@ -112,15 +112,7 @@ const userValidator = {
     bsonType: "object",
     additionalProperties: false,
     title: "user",
-    required: [
-      "firstname",
-      "lastname",
-      "email",
-      "status",
-      "admin",
-      "write",
-      "security_token",
-    ],
+    required: ["firstname", "lastname", "email", "status", "admin", "write"],
     properties: {
       _id: {
         bsonType: "objectId",

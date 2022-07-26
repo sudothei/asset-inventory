@@ -6,6 +6,7 @@ use std::sync::*;
 
 mod asset;
 mod helpers;
+mod password;
 mod user;
 
 #[actix_web::main]
@@ -57,6 +58,7 @@ async fn main() -> std::io::Result<()> {
             .service(user::create)
             .service(user::list)
             .service(user::delete)
+            .service(password::request_email)
     })
     .bind(format!("0.0.0.0:{}", api_port))?
     .run()

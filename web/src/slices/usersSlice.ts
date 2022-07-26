@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import getUsers from "thunks/getUsers";
 import deleteUsers from "thunks/deleteUsers";
+import addUser from "thunks/addUser";
 import User from "types/User";
 
 const usersSlice = createSlice({
@@ -12,6 +13,15 @@ const usersSlice = createSlice({
       .addCase(getUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
         return action.payload;
       })
+      .addCase(
+        addUser.fulfilled,
+        (state: User[], action: PayloadAction<User>) => {
+          const newUser: User = action.payload;
+          const newState: User[] = [...state];
+          newState.push(newUser);
+          return newState;
+        }
+      )
       .addCase(
         deleteUsers.fulfilled,
         (state: User[], action: PayloadAction<readonly string[]>) => {
