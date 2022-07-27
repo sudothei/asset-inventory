@@ -32,7 +32,7 @@ const UserEditModal = (props: UserEditModalProps) => {
   };
   const handlePassReset = () => {
     if (user) {
-      dispatch(sendPassReset(user._id.$oid));
+      dispatch(sendPassReset(user.email));
     }
     handleClose();
   };

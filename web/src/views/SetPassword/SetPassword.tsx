@@ -11,12 +11,24 @@ import Typography from "@mui/material/Typography";
 
 import requestPassForm from "thunks/requestPassForm";
 import User from "types/User";
+import UserPasswordForm from "types/UserPasswordForm";
 import { RootState } from "store";
 import EnhancedInputField from "components/EnhancedInputField";
 import EnhancedSwitch from "components/EnhancedSwitch";
 
 const SetPassword = () => {
-  let defaultValues = {};
+  let defaultValues: UserPasswordForm = {
+    oid: "",
+    token: "",
+    firstname: "",
+    lastname: "",
+    admin: false,
+    write: false,
+    email: "",
+    status: "Pending",
+    password: "",
+    confirm: "",
+  };
   const { oid, token } = useParams();
   const dispatch = useAppDispatch();
 
@@ -28,27 +40,37 @@ const SetPassword = () => {
     }
   }, []);
 
-  const methods = useForm<User>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control } = methods;
+  const methods = useForm<UserPasswordForm>({ defaultValues: defaultValues });
+  const { handleSubmit, reset, control, watch } = methods;
 
-  const onSubmit = (data: User) => {
+  const password = watch("password", "");
+  const confirm = watch("confirm", "");
+
+  const onSubmit = (data: UserPasswordForm) => {
     console.log("submitted");
   };
 
   useEffect(() => {
-    defaultValues = { oid: oid, ...user };
+    if (oid && token) {
+      defaultValues = {
+        oid: oid,
+        token: token,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        admin: user.admin,
+        write: user.write,
+        email: user.email,
+        status: "Pending",
+        password: "",
+        confirm: "",
+      };
+    }
     reset(defaultValues);
   }, [user]);
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <Typography variant="h2" component="h2" sx={{ textAlign: "center" }}>
-          Welcome to the Asset DB
-        </Typography>
-        <Typography variant="h4" component="h4" sx={{ textAlign: "center" }}>
-          Set your password here.
-        </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box
             sx={{
@@ -56,9 +78,31 @@ const SetPassword = () => {
               "& .MuiTextField-root": { maxWidth: "50ch" },
             }}
           >
+            <Typography
+              variant="h2"
+              component="h2"
+              sx={{ textAlign: "center" }}
+            >
+              Welcome to the Asset DB
+            </Typography>
+            <Typography
+              variant="h4"
+              component="h4"
+              sx={{ textAlign: "center" }}
+            >
+              Set your password here.
+            </Typography>
             <EnhancedInputField
+              hidden
               name="oid"
               label="Object Id"
+              readonly={true}
+              control={control}
+            />
+            <EnhancedInputField
+              hidden
+              name="token"
+              label="Token"
               readonly={true}
               control={control}
             />
@@ -97,6 +141,42 @@ const SetPassword = () => {
               readonly={true}
               label="Write Access"
               control={control}
+            />
+            <EnhancedInputField
+              name="password"
+              label="Password"
+              type="password"
+              required={true}
+              control={control}
+              rules={{
+                required: { value: true, message: "Required" },
+                minLength: 1,
+                maxLength: { value: 255, message: "Maximum 255" },
+                validate: {
+                  value: (x: string) => {
+                    return x === confirm || "Passwords must match";
+                  },
+                  message: "Passwords must match",
+                },
+              }}
+            />
+            <EnhancedInputField
+              name="confirm"
+              label="Confirm"
+              required={true}
+              type="password"
+              control={control}
+              rules={{
+                required: { value: true, message: "Required" },
+                minLength: 1,
+                maxLength: { value: 255, message: "Maximum 255" },
+                validate: {
+                  value: (x: string) => {
+                    return x === password || "Passwords must match";
+                  },
+                  message: "Passwords must match",
+                },
+              }}
             />
             <Box
               sx={{

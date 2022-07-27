@@ -10,11 +10,12 @@ interface EnhancedInputFieldRequiredProps {
   control: any;
 }
 interface EnhancedInputFieldOptionalProps {
-  type?: "number" | "input";
+  type?: "number" | "input" | "password";
   required?: boolean;
   multiline?: boolean;
   rules?: object;
   readonly?: boolean;
+  hidden?: boolean;
 }
 interface EnhancedInputFieldProps
   extends EnhancedInputFieldRequiredProps,
@@ -25,11 +26,21 @@ const defaultProps: EnhancedInputFieldOptionalProps = {
   multiline: false,
   rules: {},
   readonly: false,
+  hidden: false,
 };
 
 const EnhancedInputField = (props: EnhancedInputFieldProps) => {
-  const { name, required, label, type, control, multiline, rules, readonly } =
-    props;
+  const {
+    name,
+    required,
+    label,
+    type,
+    control,
+    multiline,
+    rules,
+    readonly,
+    hidden,
+  } = props;
 
   const id = `filled${readonly ? "-read-only" : ""}${"-" + type}`;
   const labelText = readonly ? "Read Only" : required ? "Required" : "";
@@ -39,12 +50,17 @@ const EnhancedInputField = (props: EnhancedInputFieldProps) => {
       name={name}
       control={control}
       rules={rules}
-      render={({
-        field: { onChange, value },
-        fieldState: { error },
-      }) => (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Typography sx={{minWidth: "15ch", textAlign: "enc", paddingRight: "1ch"}}>{`${label}:`}</Typography>
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <Box
+          sx={{
+            display: hidden ? "none" : "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            sx={{ minWidth: "15ch", textAlign: "enc", paddingRight: "1ch" }}
+          >{`${label}:`}</Typography>
           <TextField
             id={id}
             fullWidth

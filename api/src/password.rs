@@ -1,5 +1,6 @@
 use crate::helpers::bad_input;
-use actix_web::{get, web, HttpResponse, Responder};
+use actix_web::web::Json;
+use actix_web::{get, post, web, HttpResponse, Responder};
 use lettre::message::{header::ContentType, Mailbox, SinglePartBuilder};
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
@@ -11,39 +12,55 @@ use std::sync::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Serialize, Deserialize)]
+pub struct User {
+    pub _id: ObjectId,
+    pub firstname: String,
+    pub lastname: String,
+    pub email: String,
+    pub admin: bool,
+    pub write: bool,
+    pub status: String,
+    pub security_token: SecurityToken,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct SecurityToken {
     pub token: String,
     pub expires: u64,
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct SetUserToken {
+pub struct UserToken {
     pub security_token: SecurityToken,
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct UserEmail {
-    pub email: String,
+pub struct UserOid {
+    pub _id: ObjectId,
 }
 
-/// list a single user `/api/users/{id}/{token}`
-/// Used for password reset form
-#[get("/api/password/{id}/{token}")]
+#[derive(Serialize, Deserialize)]
+pub struct RequestFormData {
+    pub oid: String,
+    pub token: String,
+}
+
+/// get a users's password reset form data `/api/users/{id}/{token}`
+#[post("/api/password")]
 pub async fn request_form(
-    id: web::Path<String>,
     data: web::Data<Mutex<Database>>,
-    token: web::Path<String>,
+    post_data: Json<RequestFormData>,
 ) -> impl Responder {
+    let oid = post_data.oid.to_string();
+    let token = post_data.token.to_string();
     let db = data.lock().unwrap();
-    let user_collection = db.collection::<SetUserToken>("users");
-    let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
+    let user_collection = db.collection::<User>("users");
+    let filter = doc! { "_id": ObjectId::parse_str(oid).unwrap() };
     let user = user_collection
         .find_one(filter, None)
         .await
         .unwrap()
         .unwrap();
-    println!("{}", token);
-    println!("{}", user.security_token.token);
     if user.security_token.token == token.to_string() {
         HttpResponse::Ok()
             .content_type("application/json")
@@ -56,13 +73,13 @@ pub async fn request_form(
 }
 
 /// request a password set email `/api/setpassword`
-#[get("/api/password/{id}")]
+#[get("/api/password/{email}")]
 pub async fn request_email(
-    id: web::Path<String>,
+    email: web::Path<String>,
     data: web::Data<Mutex<Database>>,
 ) -> impl Responder {
     let db = data.lock().unwrap();
-    let user_collection = db.collection::<SetUserToken>("users");
+    let user_collection = db.collection::<UserToken>("users");
 
     // First generate a security token for the user
     let start = SystemTime::now();
@@ -79,10 +96,10 @@ pub async fn request_email(
         token: token.clone(),
         expires: expires,
     };
-    let set_user_token = SetUserToken {
+    let set_user_token = UserToken {
         security_token: security_token,
     };
-    let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
+    let filter = doc! {"email": email.to_string()};
     let data = doc! {"$set": bson::to_document(&set_user_token).unwrap()};
     let db_result = user_collection.update_one(filter.clone(), data, None).await;
     match db_result {
@@ -95,12 +112,12 @@ pub async fn request_email(
         }
     }
 
-    // Get the user's email from the database
-    let user_email_collection = db.collection::<UserEmail>("users");
-    let user_result = user_email_collection.find_one(filter, None).await;
-    let user_email: String;
+    // Get the user's oid from the database
+    let user_oid_collection = db.collection::<UserOid>("users");
+    let user_result = user_oid_collection.find_one(filter, None).await;
+    let user_oid: String;
     match user_result {
-        Ok(rs) => user_email = rs.unwrap().email,
+        Ok(rs) => user_oid = rs.unwrap()._id.to_string(),
         Err(err) => {
             let mongo_err = bad_input(err);
             return HttpResponse::UnprocessableEntity()
@@ -118,16 +135,17 @@ pub async fn request_email(
     let body: String = format!(
         r#"
             <p>Please set your password using the following link.</p>
-            <a =href="https://{hostname}/setpassword/{token}">https://{hostname}/setpassword/{token}</a>
+            <a =href="https://{hostname}/setpassword/{oid}/{token}">https://{hostname}/setpassword/{oid}/{token}</a>
             <p>This link will expire in 7 days</p>
         "#,
         hostname = server_hostname,
-        token = token
+        token = token,
+        oid = user_oid
     );
 
-    let email = Message::builder()
+    let message = Message::builder()
         .from(Mailbox::new(None, smtp_from.parse().unwrap()))
-        .to(Mailbox::new(None, user_email.clone().parse().unwrap()))
+        .to(Mailbox::new(None, email.clone().parse().unwrap()))
         .subject("Set your password using this link")
         .singlepart(
             SinglePartBuilder::new()
@@ -147,7 +165,7 @@ pub async fn request_email(
             .build();
     }
 
-    let result = mailer.send(email).await;
+    let result = mailer.send(message).await;
     match result {
         Ok(_rs) => HttpResponse::Ok()
             .content_type("application/json")

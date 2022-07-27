@@ -8,11 +8,12 @@ interface RequestPassFormData {
 }
 
 const requestPassForm = createAsyncThunk(
-  "users/requestPassForm",
+  "password/requestPassForm",
   async (data: RequestPassFormData) => {
-    const response = await axios.get(
-      `http://${BASE_URL}/users/${data.oid}/${data.token}`
-    );
+    const response = await axios.post(`http://${BASE_URL}/password`, {
+      oid: data.oid,
+      token: data.token,
+    });
     return await response.data;
   }
 );

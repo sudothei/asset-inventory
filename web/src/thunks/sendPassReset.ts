@@ -3,9 +3,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const sendPassReset = createAsyncThunk(
-  "users/sendPassReset",
-  async (oid: string) => {
-    axios.get(`http://${BASE_URL}/password/${oid}`);
+  "password/sendPassReset",
+  async (email: string) => {
+    axios.get(`http://${BASE_URL}/password/${email}`);
   }
 );
 export default sendPassReset;
