@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import assetsReducer from "slices/assetsSlice";
 import usersReducer from "slices/usersSlice";
+import userReducer from "slices/userSlice";
 
 const store = configureStore({
   reducer: {
     assets: assetsReducer,
     users: usersReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

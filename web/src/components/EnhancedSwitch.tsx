@@ -4,14 +4,23 @@ import Typography from "@mui/material/Typography";
 import Switch from "@mui/material/Switch";
 import { Controller } from "react-hook-form";
 
-interface EnhancedSwitchProps {
+interface EnhancedSwitchRequiredProps {
   label: string;
   name: string;
   control: any;
 }
+interface EnhancedSwitchOptionalProps {
+  readonly?: boolean;
+}
+interface EnhancedSwitchProps
+  extends EnhancedSwitchRequiredProps,
+    EnhancedSwitchOptionalProps {}
+const defaultProps: EnhancedSwitchOptionalProps = {
+  readonly: false,
+};
 
 const EnhancedSwitch = (props: EnhancedSwitchProps) => {
-  const { name, label, control } = props;
+  const { name, label, control, readonly } = props;
 
   return (
     <Controller
@@ -35,6 +44,7 @@ const EnhancedSwitch = (props: EnhancedSwitchProps) => {
               onChange={onChange}
               value={value}
               color="secondary"
+              disabled={readonly}
             />
           </Box>
         </Box>
@@ -42,4 +52,5 @@ const EnhancedSwitch = (props: EnhancedSwitchProps) => {
     />
   );
 };
+EnhancedSwitch.defaultProps = defaultProps;
 export default EnhancedSwitch;

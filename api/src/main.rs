@@ -59,6 +59,7 @@ async fn main() -> std::io::Result<()> {
             .service(user::list)
             .service(user::update)
             .service(user::delete)
+            .service(password::request_form)
             .service(password::request_email)
     })
     .bind(format!("0.0.0.0:{}", api_port))?

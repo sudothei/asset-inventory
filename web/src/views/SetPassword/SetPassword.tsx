@@ -1,27 +1,117 @@
 import * as React from "react";
-//import { useEffect } from "react";
-//import { useAppSelector, useAppDispatch } from "hooks";
+import { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "hooks";
+import { useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
-//import getUsers from "thunks/getUsers";
-
-//import User from "types/User";
-//import { RootState } from "store";
+import requestPassForm from "thunks/requestPassForm";
+import User from "types/User";
+import { RootState } from "store";
+import EnhancedInputField from "components/EnhancedInputField";
+import EnhancedSwitch from "components/EnhancedSwitch";
 
 const SetPassword = () => {
-  //const dispatch = useAppDispatch();
+  let defaultValues = {};
+  const { oid, token } = useParams();
+  const dispatch = useAppDispatch();
 
-  //useEffect(() => {
-  //dispatch(getUsers());
-  //}, [dispatch]);
+  const user: User = useAppSelector((state: RootState) => state.user);
 
-  //const users: User[] = useAppSelector((state: RootState) => state.users);
+  useEffect(() => {
+    if (oid && token) {
+      dispatch(requestPassForm({ oid, token }));
+    }
+  }, []);
+
+  const methods = useForm<User>({ defaultValues: defaultValues });
+  const { handleSubmit, reset, control } = methods;
+
+  const onSubmit = (data: User) => {
+    console.log("submitted");
+  };
+
+  useEffect(() => {
+    defaultValues = { oid: oid, ...user };
+    reset(defaultValues);
+  }, [user]);
 
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>FORM GO HERE :D</Paper>
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <Typography variant="h2" component="h2" sx={{ textAlign: "center" }}>
+          Welcome to the Asset DB
+        </Typography>
+        <Typography variant="h4" component="h4" sx={{ textAlign: "center" }}>
+          Set your password here.
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box
+            sx={{
+              p: 4,
+              "& .MuiTextField-root": { maxWidth: "50ch" },
+            }}
+          >
+            <EnhancedInputField
+              name="oid"
+              label="Object Id"
+              readonly={true}
+              control={control}
+            />
+            <EnhancedInputField
+              name="firstname"
+              label="First Name"
+              readonly={true}
+              control={control}
+            />
+            <EnhancedInputField
+              name="lastname"
+              label="Last Name"
+              readonly={true}
+              control={control}
+            />
+            <EnhancedInputField
+              name="email"
+              label="Email"
+              readonly={true}
+              control={control}
+            />
+            <EnhancedInputField
+              name="status"
+              label="Status"
+              readonly={true}
+              control={control}
+            />
+            <EnhancedSwitch
+              name="admin"
+              readonly={true}
+              label="Admin"
+              control={control}
+            />
+            <EnhancedSwitch
+              name="write"
+              readonly={true}
+              label="Write Access"
+              control={control}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row-reverse",
+                paddingTop: 4,
+              }}
+            >
+              <Button type="submit" variant="contained" color="secondary">
+                Update
+              </Button>
+            </Box>
+          </Box>
+        </form>
+      </Paper>
     </Box>
   );
 };

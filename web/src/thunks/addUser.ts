@@ -7,7 +7,7 @@ import axios from "axios";
 const addUser = createAsyncThunk("users/addUser", async (user: UserRequest) => {
   const response = await axios.post(`http://${BASE_URL}/users`, user);
   try {
-    await axios.get(`http://${BASE_URL}/password/${response.data.$oid}`);
+    axios.get(`http://${BASE_URL}/password/${response.data.$oid}`);
   } catch {}
   const newUser: User = { _id: response.data, status: "Pending", ...user };
   return newUser;

@@ -25,7 +25,10 @@ root.render(
           <Routes>
             <Route path="/" element={<Assets />}></Route>
             <Route path="/users" element={<Users />}></Route>
-            <Route path="/setpassword" element={<SetPassword />}></Route>
+            <Route
+              path="/setpassword/:oid/:token"
+              element={<SetPassword />}
+            ></Route>
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

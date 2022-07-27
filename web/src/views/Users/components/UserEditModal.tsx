@@ -11,6 +11,7 @@ import EnhancedInputField from "components/EnhancedInputField";
 import EnhancedSwitch from "components/EnhancedSwitch";
 import User from "types/User";
 import editUser from "thunks/editUser";
+import sendPassReset from "thunks/sendPassReset";
 
 interface UserEditModalProps {
   open: boolean;
@@ -27,6 +28,12 @@ const UserEditModal = (props: UserEditModalProps) => {
   const { handleSubmit, reset, control } = methods;
   const onSubmit = (data: User) => {
     dispatch(editUser(data));
+    handleClose();
+  };
+  const handlePassReset = () => {
+    if (user) {
+      dispatch(sendPassReset(user._id.$oid));
+    }
     handleClose();
   };
 
@@ -100,10 +107,14 @@ const UserEditModal = (props: UserEditModalProps) => {
               display: "flex",
               flexDirection: "row-reverse",
               paddingTop: 4,
+              justifyContent: "space-between",
             }}
           >
             <Button type="submit" variant="contained" color="secondary">
               Update
+            </Button>
+            <Button onClick={handlePassReset} variant="contained">
+              Send Password Reset
             </Button>
           </Box>
         </Box>

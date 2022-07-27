@@ -26,6 +26,35 @@ pub struct UserEmail {
     pub email: String,
 }
 
+/// list a single user `/api/users/{id}/{token}`
+/// Used for password reset form
+#[get("/api/password/{id}/{token}")]
+pub async fn request_form(
+    id: web::Path<String>,
+    data: web::Data<Mutex<Database>>,
+    token: web::Path<String>,
+) -> impl Responder {
+    let db = data.lock().unwrap();
+    let user_collection = db.collection::<SetUserToken>("users");
+    let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
+    let user = user_collection
+        .find_one(filter, None)
+        .await
+        .unwrap()
+        .unwrap();
+    println!("{}", token);
+    println!("{}", user.security_token.token);
+    if user.security_token.token == token.to_string() {
+        HttpResponse::Ok()
+            .content_type("application/json")
+            .json(user)
+    } else {
+        HttpResponse::Forbidden()
+            .content_type("text")
+            .body("Forbiden")
+    }
+}
+
 /// request a password set email `/api/setpassword`
 #[get("/api/password/{id}")]
 pub async fn request_email(
