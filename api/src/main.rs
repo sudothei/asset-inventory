@@ -5,6 +5,7 @@ use std::env;
 use std::sync::*;
 
 mod asset;
+mod auth;
 mod helpers;
 mod password;
 mod user;
@@ -62,6 +63,7 @@ async fn main() -> std::io::Result<()> {
             .service(password::request_form)
             .service(password::request_email)
             .service(password::set_password)
+            .service(auth::login)
     })
     .bind(format!("0.0.0.0:{}", api_port))?
     .run()

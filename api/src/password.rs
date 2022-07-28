@@ -1,6 +1,7 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
 use actix_web::{get, post, put, web, HttpResponse, Responder};
+use core::time::Duration;
 use lettre::message::{header::ContentType, Mailbox, SinglePartBuilder};
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
@@ -267,10 +268,11 @@ pub async fn request_email(
     if smtp_use_tls == "Y" {
         mailer = AsyncSmtpTransport::<Tokio1Executor>::starttls_relay(&smtp_server)
             .unwrap()
+            .timeout(Some(Duration::from_secs(1)))
             .build();
     } else {
         mailer = AsyncSmtpTransport::<Tokio1Executor>::builder_dangerous(&smtp_server)
-            .port(25)
+            .timeout(Some(Duration::from_secs(1)))
             .build();
     }
 

@@ -9,6 +9,9 @@ COMMON_NAME=changeme
 # for the api server's password hashing
 BCRYPT_COST_FACTOR=14
 
+# for the api server's jwt signing
+SECRET=changeme
+
 # for the api server to connect to the db
 DATABASE_HOSTNAME=host.docker.internal
 DATABASE_PORT=27017
