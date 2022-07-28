@@ -61,6 +61,7 @@ async fn main() -> std::io::Result<()> {
             .service(user::delete)
             .service(password::request_form)
             .service(password::request_email)
+            .service(password::set_password)
     })
     .bind(format!("0.0.0.0:{}", api_port))?
     .run()

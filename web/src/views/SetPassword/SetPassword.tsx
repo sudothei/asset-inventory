@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "hooks";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import Paper from "@mui/material/Paper";
@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 import requestPassForm from "thunks/requestPassForm";
+import setPassword from "thunks/setPassword";
 import User from "types/User";
 import UserPasswordForm from "types/UserPasswordForm";
 import { RootState } from "store";
@@ -17,6 +18,8 @@ import EnhancedInputField from "components/EnhancedInputField";
 import EnhancedSwitch from "components/EnhancedSwitch";
 
 const SetPassword = () => {
+  const navigate = useNavigate();
+
   let defaultValues: UserPasswordForm = {
     oid: "",
     token: "",
@@ -41,13 +44,17 @@ const SetPassword = () => {
   }, []);
 
   const methods = useForm<UserPasswordForm>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, watch } = methods;
+  const { reset, control, watch } = methods;
 
   const password = watch("password", "");
   const confirm = watch("confirm", "");
 
-  const onSubmit = (data: UserPasswordForm) => {
-    console.log("submitted");
+  const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    if (oid && token && password) {
+      dispatch(setPassword({ oid, token, password }));
+    }
+    navigate("/");
   };
 
   useEffect(() => {
@@ -71,7 +78,7 @@ const SetPassword = () => {
   return (
     <Box sx={{ paddingTop: 10, paddingRight: 10, paddingLeft: 10 }}>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={onSubmit}>
           <Box
             sx={{
               p: 4,

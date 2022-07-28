@@ -1,6 +1,6 @@
 use crate::helpers::bad_input;
 use actix_web::web::Json;
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{get, post, put, web, HttpResponse, Responder};
 use lettre::message::{header::ContentType, Mailbox, SinglePartBuilder};
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
@@ -45,14 +45,114 @@ pub struct RequestFormData {
     pub token: String,
 }
 
-/// get a users's password reset form data `/api/users/{id}/{token}`
+#[derive(Serialize, Deserialize)]
+pub struct PasswordSetRequest {
+    pub oid: String,
+    pub token: String,
+    pub password: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct PasswordInsert {
+    pub password_hash: String,
+}
+
+/// set a user's password `/api/users`
+#[put("/api/password")]
+pub async fn set_password(
+    data: web::Data<Mutex<Database>>,
+    post_data: Json<PasswordSetRequest>,
+) -> impl Responder {
+    // grab the values from the post data
+    let oid = post_data.oid.to_string();
+    let token = post_data.token.to_string();
+    let password = post_data.password.to_string();
+
+    // grab the user from the database
+    let db = data.lock().unwrap();
+    let user_collection = db.collection::<User>("users");
+    let filter = doc! { "_id": ObjectId::parse_str(oid).unwrap() };
+    let user = user_collection
+        .find_one(filter.clone(), None)
+        .await
+        .unwrap()
+        .unwrap();
+
+    // verify that the security token is correct
+    // and verify that the expiry isn't passed
+    let start = SystemTime::now();
+    let now = start
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards")
+        .as_secs();
+    if user.security_token.token == token.to_string() && now < user.security_token.expires {
+        // Hash the password and insert into DB
+        let password_hash = match bcrypt::hash(&password, 14) {
+            Ok(hashed) => hashed,
+            Err(e) => {
+                return HttpResponse::InternalServerError()
+                    .content_type("text")
+                    .body(e.to_string())
+            }
+        };
+        let password_collection = db.collection::<PasswordInsert>("users");
+        let password_insert = PasswordInsert {
+            password_hash: password_hash.to_string(),
+        };
+        let hash_doc = doc! {"$set": bson::to_document(&password_insert).unwrap()};
+        let password_result = password_collection
+            .update_one(filter.clone(), hash_doc, None)
+            .await;
+        match password_result {
+            Ok(_rs) => {}
+            Err(err) => {
+                let mongo_err = bad_input(err);
+                return HttpResponse::UnprocessableEntity()
+                    .content_type("text")
+                    .body(mongo_err);
+            }
+        }
+
+        // Set the token expiration to 0 to prevent reuse
+        let token_collection = db.collection::<UserToken>("users");
+        let security_token = SecurityToken {
+            token: user.security_token.token,
+            expires: 0,
+        };
+        let set_user_token = UserToken {
+            security_token: security_token,
+        };
+        let expiry_doc = doc! {"$set": bson::to_document(&set_user_token).unwrap()};
+        let expiry_result = token_collection.update_one(filter, expiry_doc, None).await;
+
+        // Return the _id of the updated user
+        match expiry_result {
+            Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
+            Err(err) => {
+                let mongo_err = bad_input(err);
+                HttpResponse::UnprocessableEntity()
+                    .content_type("text")
+                    .body(mongo_err)
+            }
+        }
+    } else {
+        HttpResponse::Forbidden()
+            .content_type("text")
+            .body("Forbiden")
+    }
+}
+
+/// get a users's password reset form data `/api/users`
 #[post("/api/password")]
 pub async fn request_form(
     data: web::Data<Mutex<Database>>,
     post_data: Json<RequestFormData>,
 ) -> impl Responder {
+    // grab the data from the post request
     let oid = post_data.oid.to_string();
     let token = post_data.token.to_string();
+
+    // grab the user from the DB
     let db = data.lock().unwrap();
     let user_collection = db.collection::<User>("users");
     let filter = doc! { "_id": ObjectId::parse_str(oid).unwrap() };
@@ -61,7 +161,16 @@ pub async fn request_form(
         .await
         .unwrap()
         .unwrap();
-    if user.security_token.token == token.to_string() {
+
+    // verify that the security token is correct
+    // and verify that the expiry isn't passed
+    let start = SystemTime::now();
+    let now = start
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards")
+        .as_secs();
+    if user.security_token.token == token.to_string() && now < user.security_token.expires {
+        // Send the non-sensitive user details to populate the form
         HttpResponse::Ok()
             .content_type("application/json")
             .json(user)
