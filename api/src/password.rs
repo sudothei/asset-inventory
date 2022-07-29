@@ -1,4 +1,4 @@
-use crate::helpers::bad_input;
+use crate::error::bad_input;
 use actix_web::web::Json;
 use actix_web::{get, post, put, web, HttpResponse, Responder};
 use core::time::Duration;

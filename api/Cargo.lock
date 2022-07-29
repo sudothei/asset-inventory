@@ -247,6 +247,7 @@ dependencies = [
  "bson",
  "chrono",
  "futures",
+ "futures-util",
  "jsonwebtoken",
  "lettre",
  "mongodb",

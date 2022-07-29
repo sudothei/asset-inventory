@@ -6,7 +6,8 @@ use std::sync::*;
 
 mod asset;
 mod auth;
-mod helpers;
+mod auth_middleware;
+mod error;
 mod password;
 mod user;
 
@@ -52,6 +53,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(db.clone())
             .wrap(cors)
+            .service(auth::login)
+            .wrap(auth_middleware::Auth)
             .service(asset::create)
             .service(asset::list)
             .service(asset::update)
@@ -63,7 +66,6 @@ async fn main() -> std::io::Result<()> {
             .service(password::request_form)
             .service(password::request_email)
             .service(password::set_password)
-            .service(auth::login)
     })
     .bind(format!("0.0.0.0:{}", api_port))?
     .run()

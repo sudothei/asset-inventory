@@ -1,4 +1,4 @@
-use crate::helpers::bad_input;
+use crate::error::bad_input;
 use actix_web::web::Json;
 use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};

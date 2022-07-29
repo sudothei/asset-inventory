@@ -1,13 +1,12 @@
 use actix_web::web::Json;
 use actix_web::{post, web, HttpResponse, Responder};
 use bcrypt::verify;
+use chrono::{Duration, Utc};
+use jsonwebtoken::{encode, EncodingKey, Header};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::sync::*;
-
-use chrono::{Duration, Utc};
-use jsonwebtoken::{encode, EncodingKey, Header};
 
 #[derive(Serialize, Deserialize)]
 pub struct Claims {
@@ -15,6 +14,11 @@ pub struct Claims {
     pub admin: bool,
     pub write: bool,
     pub exp: usize,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UserEmail {
+    pub email: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -42,19 +46,23 @@ pub async fn login(data: web::Data<Mutex<Database>>, post_data: Json<LoginData>)
     // grab the user from the DB
     let db = data.lock().unwrap();
     let user_collection = db.collection::<UserCreds>("users");
-    let filter = doc! {"email": email.to_string()};
-    let user = user_collection
-        .find_one(filter, None)
-        .await
-        .unwrap()
-        .unwrap();
+    let filter = doc! {"email": email};
+    let user = match user_collection.find_one(filter, None).await {
+        Ok(rs) => rs.unwrap(),
+        // 302 if user not present to prevent email enumeration
+        Err(_err) => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Forbiden")
+        }
+    };
 
     // verify that the password is correct
     let valid = verify(password, &user.password_hash);
     match valid {
         Ok(_rs) => {
             // Make the jwt
-            let secret = env::var("SECRET").unwrap().into_bytes();
+            let secret = env::var("SECRET").expect("SECRET must be set").into_bytes();
             let expiration_time = Utc::now()
                 .checked_add_signed(Duration::seconds(60))
                 .expect("invalid timestamp")
@@ -74,8 +82,11 @@ pub async fn login(data: web::Data<Mutex<Database>>, post_data: Json<LoginData>)
                 Err(_) => panic!(),
             };
 
-            // Send the jwt
-            HttpResponse::Ok().content_type("text").body(token)
+            // Send the jwt in the Authorization header
+            HttpResponse::Ok()
+                .content_type("text")
+                .insert_header(("Authorization", format!("Bearer {}", token)))
+                .body("Success")
         }
         Err(_err) => HttpResponse::Unauthorized()
             .content_type("text")
