@@ -5,7 +5,12 @@ import User from "types/User";
 import axios from "axios";
 
 const addUser = createAsyncThunk("users/addUser", async (user: UserRequest) => {
-  const response = await axios.post(`http://${BASE_URL}/users`, user);
+  const headers = {
+    headers: {
+      Authorization: "bearer " + localStorage.getItem("token"),
+    },
+  };
+  const response = await axios.post(`http://${BASE_URL}/users`, user, headers);
   try {
     axios.get(`http://${BASE_URL}/password/${user.email}`);
   } catch {}

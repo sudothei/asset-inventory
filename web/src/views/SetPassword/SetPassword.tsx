@@ -35,7 +35,7 @@ const SetPassword = () => {
   const { oid, token } = useParams();
   const dispatch = useAppDispatch();
 
-  const user: User = useAppSelector((state: RootState) => state.user);
+  const user: User = useAppSelector((state: RootState) => state.register);
 
   useEffect(() => {
     if (oid && token) {

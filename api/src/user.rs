@@ -1,6 +1,7 @@
 use crate::error::bad_input;
+use crate::helpers::get_token;
 use actix_web::web::Json;
-use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
+use actix_web::{delete, get, post, put, web, HttpRequest, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
 use std::sync::*;
@@ -44,7 +45,22 @@ pub struct UserPermissions {
 
 /// list all users `/api/users`
 #[get("/api/users")]
-pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
+pub async fn list(data: web::Data<Mutex<Database>>, req: HttpRequest) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(rs) => {
+            if !rs.admin {
+                return HttpResponse::Unauthorized()
+                    .content_type("text")
+                    .body("Unauthorized");
+            }
+        }
+    }
     let db = data.lock().unwrap();
     let user_collection = db.collection::<ExistingUser>("users");
     let cursor = user_collection.find(None, None).await.unwrap();
@@ -62,7 +78,23 @@ pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
 pub async fn create(
     data: web::Data<Mutex<Database>>,
     user_req: Json<UserAddRequest>,
+    req: HttpRequest,
 ) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(rs) => {
+            if !rs.admin {
+                return HttpResponse::Unauthorized()
+                    .content_type("text")
+                    .body("Unauthorized");
+            }
+        }
+    }
     let db = data.lock().unwrap();
     let user_collection = db.collection("users");
 
@@ -94,7 +126,26 @@ pub async fn create(
 
 /// delete a user `/api/users/{id}`
 #[delete("/api/users/{id}")]
-pub async fn delete(id: web::Path<String>, data: web::Data<Mutex<Database>>) -> impl Responder {
+pub async fn delete(
+    id: web::Path<String>,
+    data: web::Data<Mutex<Database>>,
+    req: HttpRequest,
+) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(rs) => {
+            if !rs.admin {
+                return HttpResponse::Unauthorized()
+                    .content_type("text")
+                    .body("Unauthorized");
+            }
+        }
+    }
     let db = data.lock().unwrap();
     let user_collection = db.collection::<ExistingUser>("users");
     let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
@@ -116,7 +167,23 @@ pub async fn update(
     id: web::Path<String>,
     data: web::Data<Mutex<Database>>,
     user_perms: Json<UserPermissions>,
+    req: HttpRequest,
 ) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(rs) => {
+            if !rs.admin {
+                return HttpResponse::Unauthorized()
+                    .content_type("text")
+                    .body("Unauthorized");
+            }
+        }
+    }
     let db = data.lock().unwrap();
     let user_collection = db.collection::<UserPermissions>("users");
     let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };

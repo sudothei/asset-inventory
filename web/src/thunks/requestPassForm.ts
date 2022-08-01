@@ -14,7 +14,7 @@ const requestPassForm = createAsyncThunk(
       oid: data.oid,
       token: data.token,
     });
-    return await response.data;
+    return response.data;
   }
 );
 export default requestPassForm;

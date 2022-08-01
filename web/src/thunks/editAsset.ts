@@ -4,7 +4,16 @@ import Asset from "types/Asset";
 import axios from "axios";
 
 const editAsset = createAsyncThunk("assets/editAsset", async (asset: Asset) => {
-  await axios.put(`http://${BASE_URL}/assets/${asset._id.$oid}`, asset);
+  const headers = {
+    headers: {
+      Authorization: "bearer " + localStorage.getItem("token"),
+    },
+  };
+  await axios.put(
+    `http://${BASE_URL}/assets/${asset._id.$oid}`,
+    asset,
+    headers
+  );
   const newAsset: Asset = asset;
   return newAsset;
 });

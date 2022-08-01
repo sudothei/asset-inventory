@@ -1,7 +1,0 @@
-// for building api as prod and running
-cargo build --release
-cargo run
-
-// for building web as prod and running
-npm run build
-// then serve build/index.html

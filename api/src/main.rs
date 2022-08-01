@@ -6,8 +6,8 @@ use std::sync::*;
 
 mod asset;
 mod auth;
-mod auth_middleware;
 mod error;
+mod helpers;
 mod password;
 mod user;
 
@@ -54,7 +54,6 @@ async fn main() -> std::io::Result<()> {
             .app_data(db.clone())
             .wrap(cors)
             .service(auth::login)
-            .wrap(auth_middleware::Auth)
             .service(asset::create)
             .service(asset::list)
             .service(asset::update)

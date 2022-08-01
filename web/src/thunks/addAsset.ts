@@ -7,7 +7,16 @@ import axios from "axios";
 const addAsset = createAsyncThunk(
   "assets/addAsset",
   async (asset: AssetRequest) => {
-    const response = await axios.post(`http://${BASE_URL}/assets`, asset);
+    const headers = {
+      headers: {
+        Authorization: "bearer " + localStorage.getItem("token"),
+      },
+    };
+    const response = await axios.post(
+      `http://${BASE_URL}/assets`,
+      asset,
+      headers
+    );
     const newAsset: Asset = { _id: response.data, ...asset };
     return newAsset;
   }

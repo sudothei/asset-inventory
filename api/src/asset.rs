@@ -1,6 +1,7 @@
 use crate::error::bad_input;
+use crate::helpers::get_token;
 use actix_web::web::Json;
-use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
+use actix_web::{delete, get, post, put, web, HttpRequest, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use serde::{Deserialize, Serialize};
 use std::sync::*;
@@ -39,7 +40,16 @@ pub struct Asset {
 
 /// list all assets `/api/assets`
 #[get("/api/assets")]
-pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
+pub async fn list(data: web::Data<Mutex<Database>>, req: HttpRequest) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(_rs) => {}
+    }
     let db = data.lock().unwrap();
     let asset_collection = db.collection::<Asset>("assets");
     let cursor = asset_collection.find(None, None).await.unwrap();
@@ -57,7 +67,24 @@ pub async fn list(data: web::Data<Mutex<Database>>) -> impl Responder {
 pub async fn create(
     data: web::Data<Mutex<Database>>,
     asset_req: Json<AssetRequest>,
+    req: HttpRequest,
 ) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(rs) => {
+            if !rs.write {
+                return HttpResponse::Unauthorized()
+                    .content_type("text")
+                    .body("Unauthorized");
+            }
+        }
+    }
+
     let db = data.lock().unwrap();
     let asset_collection = db.collection("assets");
     let result = asset_collection.insert_one(asset_req, None).await;
@@ -83,7 +110,23 @@ pub async fn update(
     id: web::Path<String>,
     data: web::Data<Mutex<Database>>,
     asset: Json<Asset>,
+    req: HttpRequest,
 ) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(rs) => {
+            if !rs.write {
+                return HttpResponse::Unauthorized()
+                    .content_type("text")
+                    .body("Unauthorized");
+            }
+        }
+    }
     let db = data.lock().unwrap();
     let asset_collection = db.collection::<Asset>("assets");
     let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };
@@ -102,7 +145,26 @@ pub async fn update(
 
 /// delete a asset `/api/assets/{id}`
 #[delete("/api/assets/{id}")]
-pub async fn delete(id: web::Path<String>, data: web::Data<Mutex<Database>>) -> impl Responder {
+pub async fn delete(
+    id: web::Path<String>,
+    data: web::Data<Mutex<Database>>,
+    req: HttpRequest,
+) -> impl Responder {
+    let jwt = get_token(req);
+    match jwt {
+        None => {
+            return HttpResponse::Unauthorized()
+                .content_type("text")
+                .body("Unauthorized")
+        }
+        Some(rs) => {
+            if !rs.write {
+                return HttpResponse::Unauthorized()
+                    .content_type("text")
+                    .body("Unauthorized");
+            }
+        }
+    }
     let db = data.lock().unwrap();
     let asset_collection = db.collection::<Asset>("assets");
     let filter = doc! { "_id": ObjectId::parse_str(id.into_inner()).unwrap() };

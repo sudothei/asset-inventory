@@ -13,6 +13,7 @@ import Login from "./views/Login/Login";
 import theme from "./theme";
 import "index.css";
 import store from "./store";
+import PrivateRoute from "components/PrivateRoute";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
@@ -24,8 +25,14 @@ root.render(
         <CssBaseline />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Assets />}></Route>
-            <Route path="/users" element={<Users />}></Route>
+            <Route
+              path="/"
+              element={<PrivateRoute component={<Assets />} />}
+            ></Route>
+            <Route
+              path="/Users"
+              element={<PrivateRoute component={<Users />} />}
+            ></Route>
             <Route
               path="/setpassword/:oid/:token"
               element={<SetPassword />}

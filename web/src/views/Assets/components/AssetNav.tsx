@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { useAppSelector } from "hooks";
+import { useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,6 +9,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
+import Button from "@mui/material/Button";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -31,6 +33,7 @@ interface AssetNavProps {
 
 const AssetNav = (props: AssetNavProps) => {
   const { onSearch, onDelete } = props;
+  const navigate = useNavigate();
 
   // For the download as CSV button
   const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
@@ -60,6 +63,12 @@ const AssetNav = (props: AssetNavProps) => {
   };
   const handleDeleteClose = () => {
     setDeleteAnchorEl(null);
+  };
+
+  // For logout button
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
@@ -106,7 +115,6 @@ const AssetNav = (props: AssetNavProps) => {
             alignItems: "center",
           }}
         >
-          {/* Included for visual symmetry */}
           <IconButton onClick={handleDeleteClick}>
             <DeleteIcon fontSize="large" color="primary" />
           </IconButton>
@@ -133,9 +141,11 @@ const AssetNav = (props: AssetNavProps) => {
             <Icon fontSize="large" />
           </IconButton>
         </Box>
-        <Box
-          sx={{ display: "flex", justifyContent: "flex-end", flex: "1" }}
-        ></Box>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", flex: "1" }}>
+          <Button onClick={logout} color="inherit">
+            Log Out
+          </Button>
+        </Box>
       </Toolbar>
     </AppBar>
   );

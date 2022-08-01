@@ -64,7 +64,7 @@ pub async fn login(data: web::Data<Mutex<Database>>, post_data: Json<LoginData>)
             // Make the jwt
             let secret = env::var("SECRET").expect("SECRET must be set").into_bytes();
             let expiration_time = Utc::now()
-                .checked_add_signed(Duration::seconds(60))
+                .checked_add_signed(Duration::days(1))
                 .expect("invalid timestamp")
                 .timestamp();
             let user_claims = Claims {
@@ -86,7 +86,7 @@ pub async fn login(data: web::Data<Mutex<Database>>, post_data: Json<LoginData>)
             HttpResponse::Ok()
                 .content_type("text")
                 .insert_header(("Authorization", format!("Bearer {}", token)))
-                .body("Success")
+                .body(token)
         }
         Err(_err) => HttpResponse::Unauthorized()
             .content_type("text")

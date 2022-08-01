@@ -3,7 +3,12 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const getUsers = createAsyncThunk("users/getUsers", async () => {
-  const response = await axios.get(`http://${BASE_URL}/users`);
-  return await response.data;
+  const headers = {
+    headers: {
+      Authorization: "bearer " + localStorage.getItem("token"),
+    },
+  };
+  const response = await axios.get(`http://${BASE_URL}/users`, headers);
+  return response.data;
 });
 export default getUsers;

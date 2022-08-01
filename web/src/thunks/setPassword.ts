@@ -12,7 +12,7 @@ const setPassword = createAsyncThunk(
   "password/setPassword",
   async (data: SetPassword) => {
     const response = await axios.put(`http://${BASE_URL}/password`, data);
-    return await response.data;
+    return response.data;
   }
 );
 export default setPassword;
