@@ -45,9 +45,11 @@ pub async fn set_password(
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards")
         .as_secs();
+    let bcrypt_cost_factor =
+        env::var("BCRYPT_COST_FACTOR").expect("BCRYPT_COST_FACTOR must be set");
     if user.security_token.token == token.to_string() && now < user.security_token.expires {
         // Hash the password and insert into DB
-        let password_hash = match bcrypt::hash(&password, 14) {
+        let password_hash = match bcrypt::hash(&password, bcrypt_cost_factor.parse().unwrap()) {
             Ok(hashed) => hashed,
             Err(e) => {
                 return HttpResponse::InternalServerError()

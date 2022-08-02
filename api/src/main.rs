@@ -39,6 +39,9 @@ async fn main() -> std::io::Result<()> {
             .database("inventoryAssetDB"),
     ));
 
+    // create initial admin if user collection has none
+    helpers::create_initial_admin(db.clone()).await;
+
     // uses move to avoid closure problems with db
     HttpServer::new(move || {
         // uses cors to allow api requests from any origin

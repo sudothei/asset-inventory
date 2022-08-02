@@ -142,3 +142,19 @@ pub struct UserPermissions {
     pub admin: bool,
     pub write: bool,
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct AdminInsert {
+    pub firstname: String,
+    pub lastname: String,
+    pub email: String,
+    pub admin: bool,
+    pub write: bool,
+    pub status: String,
+    pub password_hash: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Admins {
+    pub admin: bool,
+}
