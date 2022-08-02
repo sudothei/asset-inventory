@@ -1,4 +1,8 @@
 use crate::error::bad_input;
+use crate::models::{
+    Claims, PasswordInsert, PasswordSetRequest, RequestFormData, SecurityToken, User, UserOid,
+    UserToken,
+};
 use actix_web::web::Json;
 use actix_web::{get, post, put, web, HttpResponse, Responder};
 use chrono::Utc;
@@ -9,65 +13,9 @@ use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
-use serde::{Deserialize, Serialize};
 use std::env;
 use std::sync::*;
 use std::time::{SystemTime, UNIX_EPOCH};
-
-#[derive(Serialize, Deserialize)]
-pub struct Claims {
-    pub oid: String,
-    pub admin: bool,
-    pub write: bool,
-    pub exp: usize,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct User {
-    pub _id: ObjectId,
-    pub firstname: String,
-    pub lastname: String,
-    pub email: String,
-    pub admin: bool,
-    pub write: bool,
-    pub status: String,
-    pub security_token: SecurityToken,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct SecurityToken {
-    pub token: String,
-    pub expires: u64,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserToken {
-    pub security_token: SecurityToken,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserOid {
-    pub _id: ObjectId,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct RequestFormData {
-    pub oid: String,
-    pub token: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct PasswordSetRequest {
-    pub oid: String,
-    pub token: String,
-    pub password: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct PasswordInsert {
-    pub password_hash: String,
-    pub status: String,
-}
 
 /// set a user's password `/api/users`
 #[put("/api/password")]

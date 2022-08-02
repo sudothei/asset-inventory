@@ -1,42 +1,11 @@
 use crate::error::bad_input;
 use crate::helpers::get_token;
+use crate::models::{Asset, AssetRequest};
 use actix_web::web::Json;
 use actix_web::{delete, get, post, put, web, HttpRequest, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
-use serde::{Deserialize, Serialize};
 use std::sync::*;
 use tokio_stream::StreamExt;
-
-#[derive(Deserialize, Serialize)]
-pub struct AssetRequest {
-    pub name: String,
-    pub assetno: String,
-    pub vendor: String,
-    pub category: String,
-    pub subcategory: Option<String>,
-    pub count: i32,
-    pub location: String,
-    pub sublocation: Option<String>,
-    pub description: Option<String>,
-    pub serialno: Option<String>,
-    pub notes: Option<String>,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct Asset {
-    pub _id: ObjectId,
-    pub name: String,
-    pub assetno: String,
-    pub vendor: String,
-    pub category: String,
-    pub subcategory: Option<String>,
-    pub count: i32,
-    pub location: String,
-    pub sublocation: Option<String>,
-    pub description: Option<String>,
-    pub serialno: Option<String>,
-    pub notes: Option<String>,
-}
 
 /// list all assets `/api/assets`
 #[get("/api/assets")]

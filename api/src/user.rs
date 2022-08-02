@@ -1,47 +1,11 @@
 use crate::error::bad_input;
 use crate::helpers::get_token;
+use crate::models::{ExistingUser, UserAddRequest, UserInsert, UserPermissions};
 use actix_web::web::Json;
 use actix_web::{delete, get, post, put, web, HttpRequest, HttpResponse, Responder};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
-use serde::{Deserialize, Serialize};
 use std::sync::*;
 use tokio_stream::StreamExt;
-
-#[derive(Serialize, Deserialize)]
-pub struct ExistingUser {
-    pub _id: ObjectId,
-    pub firstname: String,
-    pub lastname: String,
-    pub email: String,
-    pub admin: bool,
-    pub write: bool,
-    pub status: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserAddRequest {
-    pub firstname: String,
-    pub lastname: String,
-    pub email: String,
-    pub admin: bool,
-    pub write: bool,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserInsert {
-    pub firstname: String,
-    pub lastname: String,
-    pub email: String,
-    pub admin: bool,
-    pub write: bool,
-    pub status: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserPermissions {
-    pub admin: bool,
-    pub write: bool,
-}
 
 /// list all users `/api/users`
 #[get("/api/users")]

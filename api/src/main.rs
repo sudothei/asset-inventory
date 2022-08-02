@@ -8,6 +8,7 @@ mod asset;
 mod auth;
 mod error;
 mod helpers;
+mod models;
 mod password;
 mod user;
 

@@ -1,40 +1,12 @@
+use crate::models::{Claims, LoginData, UserCreds};
 use actix_web::web::Json;
 use actix_web::{post, web, HttpResponse, Responder};
 use bcrypt::verify;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{encode, EncodingKey, Header};
-use mongodb::{bson::doc, bson::oid::ObjectId, Database};
-use serde::{Deserialize, Serialize};
+use mongodb::{bson::doc, Database};
 use std::env;
 use std::sync::*;
-
-#[derive(Serialize, Deserialize)]
-pub struct Claims {
-    pub oid: String,
-    pub admin: bool,
-    pub write: bool,
-    pub exp: usize,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserEmail {
-    pub email: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct UserCreds {
-    pub _id: ObjectId,
-    pub email: String,
-    pub password_hash: String,
-    pub admin: bool,
-    pub write: bool,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct LoginData {
-    pub email: String,
-    pub password: String,
-}
 
 /// get a users's password reset form data `/api/users`
 #[post("/api/login")]
