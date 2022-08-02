@@ -75,7 +75,9 @@ const Assets = () => {
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = assets.map((n: Asset) => n._id.$oid);
+      const newSelecteds = assets
+        .filter(filterByTerm)
+        .map((n: Asset) => n._id.$oid);
       setSelected(newSelecteds);
     } else {
       setSelected([]);

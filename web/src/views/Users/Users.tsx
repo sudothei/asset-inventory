@@ -74,7 +74,9 @@ const Dashboard = () => {
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n: User) => n._id.$oid);
+      const newSelecteds = users
+        .filter(filterByTerm)
+        .map((n: User) => n._id.$oid);
       setSelected(newSelecteds);
     } else {
       setSelected([]);
