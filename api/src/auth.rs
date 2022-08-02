@@ -79,7 +79,11 @@ pub async fn login(data: web::Data<Mutex<Database>>, post_data: Json<LoginData>)
                 &EncodingKey::from_secret(&secret),
             ) {
                 Ok(t) => t,
-                Err(_) => panic!(),
+                Err(_err) => {
+                    return HttpResponse::Unauthorized()
+                        .content_type("text")
+                        .body("Forbiden")
+                }
             };
 
             // Send the jwt in the Authorization header

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppSelector } from "hooks";
 import { useNavigate } from "react-router-dom";
 
@@ -25,6 +25,8 @@ import AssetDeleteMenu from "./AssetDeleteMenu";
 
 import Asset from "types/Asset";
 import { RootState } from "store";
+import jwt_decode from "jwt-decode";
+import Claims from "types/Claims";
 
 interface AssetNavProps {
   onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -34,6 +36,21 @@ interface AssetNavProps {
 const AssetNav = (props: AssetNavProps) => {
   const { onSearch, onDelete } = props;
   const navigate = useNavigate();
+
+  // for write access UI features
+  const [writeAccess, setWriteAccess] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decodedToken: Claims = jwt_decode(token);
+      if (decodedToken) {
+        if (Date.now() / 1000 < decodedToken.exp) {
+          setWriteAccess(decodedToken.write);
+        }
+      }
+    }
+  }, []);
 
   // For the download as CSV button
   const assets: Asset[] = useAppSelector((state: RootState) => state.assets);
@@ -115,8 +132,12 @@ const AssetNav = (props: AssetNavProps) => {
             alignItems: "center",
           }}
         >
-          <IconButton onClick={handleDeleteClick}>
-            <DeleteIcon fontSize="large" color="primary" />
+          <IconButton onClick={handleDeleteClick} disabled={!writeAccess}>
+            {writeAccess ? (
+              <DeleteIcon fontSize="large" color="primary" />
+            ) : (
+              <Icon fontSize="large" color="primary" />
+            )}
           </IconButton>
           <IconButton>
             <CSVLink
@@ -134,8 +155,12 @@ const AssetNav = (props: AssetNavProps) => {
             placeholder="Search"
             onChange={onSearch}
           />
-          <IconButton onClick={toggleAssetAddModal}>
-            <AddBoxIcon fontSize="large" color="secondary" />
+          <IconButton onClick={toggleAssetAddModal} disabled={!writeAccess}>
+            {writeAccess ? (
+              <AddBoxIcon fontSize="large" color="secondary" />
+            ) : (
+              <Icon fontSize="large" color="primary" />
+            )}
           </IconButton>
           <IconButton disabled={true}>
             <Icon fontSize="large" />

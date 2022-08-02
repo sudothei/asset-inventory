@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -11,6 +13,9 @@ import ListItemText from "@mui/material/ListItemText";
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 
+import jwt_decode from "jwt-decode";
+import Claims from "types/Claims";
+
 interface AssetDrawerProps {
   open: boolean;
   handleClick: () => void;
@@ -18,8 +23,29 @@ interface AssetDrawerProps {
 
 const AssetDrawer = (props: AssetDrawerProps) => {
   const { open, handleClick } = props;
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // For the user add modal
+  // For logout button
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  // for admin-only UI elements
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      const decodedToken: Claims = jwt_decode(token);
+      if (decodedToken) {
+        if (Date.now() / 1000 < decodedToken.exp) {
+          setIsAdmin(decodedToken.admin);
+        }
+      }
+    }
+  }, []);
+
   return (
     <Drawer
       sx={{
@@ -36,20 +62,23 @@ const AssetDrawer = (props: AssetDrawerProps) => {
       onClose={handleClick}
     >
       <List>
-        <ListItem key={"Add User"} disablePadding></ListItem>
-        <ListItem key={"Manage Users"} disablePadding>
-          <ListItemButton href="/users">
-            <ListItemIcon>
-              <GroupIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Users"} />
-          </ListItemButton>
-        </ListItem>
+        {isAdmin ? (
+          <ListItem key={"Users"} disablePadding>
+            <ListItemButton href="/users">
+              <ListItemIcon>
+                <GroupIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Users"} />
+            </ListItemButton>
+          </ListItem>
+        ) : (
+          ""
+        )}
       </List>
       <Divider />
       <List>
         <ListItem key={"Logout"} disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={logout}>
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>

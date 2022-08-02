@@ -1,7 +1,9 @@
 use crate::error::bad_input;
 use actix_web::web::Json;
 use actix_web::{get, post, put, web, HttpResponse, Responder};
+use chrono::Utc;
 use core::time::Duration;
+use jsonwebtoken::{encode, EncodingKey, Header};
 use lettre::message::{header::ContentType, Mailbox, SinglePartBuilder};
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 use mongodb::{bson::doc, bson::oid::ObjectId, Database};
@@ -11,6 +13,14 @@ use serde::{Deserialize, Serialize};
 use std::env;
 use std::sync::*;
 use std::time::{SystemTime, UNIX_EPOCH};
+
+#[derive(Serialize, Deserialize)]
+pub struct Claims {
+    pub oid: String,
+    pub admin: bool,
+    pub write: bool,
+    pub exp: usize,
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct User {
@@ -56,6 +66,7 @@ pub struct PasswordSetRequest {
 #[derive(Serialize, Deserialize)]
 pub struct PasswordInsert {
     pub password_hash: String,
+    pub status: String,
 }
 
 /// set a user's password `/api/users`
@@ -99,6 +110,7 @@ pub async fn set_password(
         let password_collection = db.collection::<PasswordInsert>("users");
         let password_insert = PasswordInsert {
             password_hash: password_hash.to_string(),
+            status: "Active".to_string(),
         };
         let hash_doc = doc! {"$set": bson::to_document(&password_insert).unwrap()};
         let password_result = password_collection
@@ -128,7 +140,38 @@ pub async fn set_password(
 
         // Return the _id of the updated user
         match expiry_result {
-            Ok(rs) => HttpResponse::Ok().content_type("application/json").json(rs),
+            Ok(_rs) => {
+                // Make the jwt
+                let secret = env::var("SECRET").expect("SECRET must be set").into_bytes();
+                let expiration_time = Utc::now()
+                    .checked_add_signed(chrono::Duration::days(1))
+                    .expect("invalid timestamp")
+                    .timestamp();
+                let user_claims = Claims {
+                    oid: user._id.to_string().clone(),
+                    admin: user.admin.clone(),
+                    write: user.write.clone(),
+                    exp: expiration_time as usize,
+                };
+                let token = match encode(
+                    &Header::default(),
+                    &user_claims,
+                    &EncodingKey::from_secret(&secret),
+                ) {
+                    Ok(t) => t,
+                    Err(_) => {
+                        return HttpResponse::Forbidden()
+                            .content_type("text")
+                            .body("Forbiden")
+                    }
+                };
+
+                // Send the jwt in the Authorization header
+                HttpResponse::Ok()
+                    .content_type("text")
+                    .insert_header(("Authorization", format!("Bearer {}", token)))
+                    .body(token)
+            }
             Err(err) => {
                 let mongo_err = bad_input(err);
                 HttpResponse::UnprocessableEntity()

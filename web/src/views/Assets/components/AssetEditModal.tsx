@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch } from "hooks";
 import { useForm } from "react-hook-form";
 
@@ -10,6 +10,8 @@ import Button from "@mui/material/Button";
 import EnhancedInputField from "components/EnhancedInputField";
 import Asset from "types/Asset";
 import editAsset from "thunks/editAsset";
+import jwt_decode from "jwt-decode";
+import Claims from "types/Claims";
 
 interface AssetEditModalProps {
   open: boolean;
@@ -19,6 +21,21 @@ interface AssetEditModalProps {
 
 const AssetEditModal = (props: AssetEditModalProps) => {
   const { open, handleClose, asset } = props;
+
+  // for write access UI features
+  const [writeAccess, setWriteAccess] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decodedToken: Claims = jwt_decode(token);
+      if (decodedToken) {
+        if (Date.now() / 1000 < decodedToken.exp) {
+          setWriteAccess(decodedToken.write);
+        }
+      }
+    }
+  }, []);
 
   const dispatch = useAppDispatch();
   let defaultValues = {};
@@ -78,6 +95,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             name="name"
             label="Name"
             required={true}
+            readonly={!writeAccess}
             rules={{
               required: { value: true, message: "Required" },
               minLength: 1,
@@ -89,6 +107,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             name="assetno"
             label="Asset No"
             required={true}
+            readonly={!writeAccess}
             rules={{
               required: { value: true, message: "Required" },
               minLength: 1,
@@ -100,6 +119,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             name="vendor"
             label="Vendor"
             required={true}
+            readonly={!writeAccess}
             rules={{
               required: { value: true, message: "Required" },
               minLength: 1,
@@ -111,6 +131,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             name="category"
             label="Category"
             required={true}
+            readonly={!writeAccess}
             rules={{
               required: { value: true, message: "Required" },
               minLength: 1,
@@ -121,6 +142,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
           <EnhancedInputField
             name="subcategory"
             label="Subcategory"
+            readonly={!writeAccess}
             rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
             control={control}
           />
@@ -129,6 +151,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             label="Count"
             type="number"
             required={true}
+            readonly={!writeAccess}
             rules={{ required: { value: true, message: "Required" }, min: 1 }}
             control={control}
           />
@@ -136,6 +159,7 @@ const AssetEditModal = (props: AssetEditModalProps) => {
             name="location"
             label="Location"
             required={true}
+            readonly={!writeAccess}
             rules={{
               required: { value: true, message: "Required" },
               minLength: 1,
@@ -146,20 +170,28 @@ const AssetEditModal = (props: AssetEditModalProps) => {
           <EnhancedInputField
             name="sublocation"
             label="Sublocation"
+            readonly={!writeAccess}
             rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
             control={control}
           />
           <EnhancedInputField
             name="serialno"
             label="Serial No"
+            readonly={!writeAccess}
             rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
             control={control}
           />
-          <EnhancedInputField name="notes" label="Notes" control={control} />
+          <EnhancedInputField
+            name="notes"
+            readonly={!writeAccess}
+            label="Notes"
+            control={control}
+          />
           <EnhancedInputField
             name="description"
             label="Description"
             multiline={true}
+            readonly={!writeAccess}
             rules={{ maxLength: { value: 255, message: "Maximum 255" } }}
             control={control}
           />
@@ -170,9 +202,13 @@ const AssetEditModal = (props: AssetEditModalProps) => {
               paddingTop: 4,
             }}
           >
-            <Button type="submit" variant="contained" color="secondary">
-              Update
-            </Button>
+            {writeAccess ? (
+              <Button type="submit" variant="contained" color="secondary">
+                Update
+              </Button>
+            ) : (
+              ""
+            )}
           </Box>
         </Box>
       </form>

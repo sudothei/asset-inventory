@@ -14,6 +14,7 @@ import theme from "./theme";
 import "index.css";
 import store from "./store";
 import PrivateRoute from "components/PrivateRoute";
+import AdminRoute from "components/AdminRoute";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
@@ -31,7 +32,7 @@ root.render(
             ></Route>
             <Route
               path="/Users"
-              element={<PrivateRoute component={<Users />} />}
+              element={<AdminRoute component={<Users />} />}
             ></Route>
             <Route
               path="/setpassword/:oid/:token"

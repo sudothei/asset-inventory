@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -23,6 +24,13 @@ interface DashDrawerProps {
 
 const DashDrawer = (props: DashDrawerProps) => {
   const { open, handleClick } = props;
+
+  // For logout button
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   // For the user add modal
   const [userAddModalOpen, setUserAddModalOpen] = useState(false);
@@ -76,7 +84,7 @@ const DashDrawer = (props: DashDrawerProps) => {
       <Divider />
       <List>
         <ListItem key={"Logout"} disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={logout}>
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
