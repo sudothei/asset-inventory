@@ -22,7 +22,7 @@
 
 1. Install Docker on Linux: [docs.docker.com/engine/install](https://docs.docker.com/engine/install/)
 2. Install Docker Compose: [docs.docker.com/compose/install](https://docs.docker.com/compose/install/)
-3. Edit the `env_file` to your preferences
+3. Edit the `.env` to your preferences
 4. Run `docker-compose build inventory-asset-db`
 5. Run `docker-compose up --no-deps -d inventory-asset-db`
 
