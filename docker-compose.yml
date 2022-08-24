@@ -13,8 +13,6 @@ services:
       - .env
     build:
       context: ./api
-      args:
-        CARGO_REGISTRY: ${CARGO_REGISTRY}
     ports:
       - "80:80"
       - "443:443"

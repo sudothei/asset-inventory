@@ -4,8 +4,7 @@ WORKDIR /api
 COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./.cargo ./.cargo
-ARG CARGO_REGISTRY
-RUN echo registry = \"${CARGO_REGISTRY}\" >> .cargo/config
+RUN git config --global http.sslverify false
 RUN cargo build --release
 
 RUN rm src/*.rs
