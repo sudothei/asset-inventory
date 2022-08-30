@@ -32,7 +32,6 @@ ARG SERVER_HOSTNAME
 ARG SMTP_FROM
 ARG SMTP_SERVER
 ARG SMTP_USE_TLS
-ARG API_PORT
 COPY --from=build /api/target/release/api .
 COPY --from=generate-certs ./ /etc/nginx/certs
 COPY ./web.conf /etc/nginx/conf.d/web.conf

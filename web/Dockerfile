@@ -5,7 +5,6 @@ RUN npm install
 COPY ./ /app/
 ENV PATH /app/node_modules/.bin:$PATH
 ARG SERVER_HOSTNAME
-ARG API_PORT
 #RUN CI=true npm test
 RUN npm run build
 

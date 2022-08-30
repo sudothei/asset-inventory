@@ -11,7 +11,6 @@ services:
         - ORGANIZATIONAL_UNIT=${ORGANIZATIONAL_UNIT}
         - COMMON_NAME=${COMMON_NAME}
         - SERVER_HOSTNAME=${SERVER_HOSTNAME}
-        - API_PORT=${API_PORT}
     ports:
       - "443:443"
   api:
@@ -35,6 +34,5 @@ services:
         - SMTP_FROM=${SMTP_FROM}
         - SMTP_SERVER=${SMTP_SERVER}
         - SMTP_USE_TLS=${SMTP_USE_TLS}
-        - API_PORT=${API_PORT}
     ports:
       - "443:443"
