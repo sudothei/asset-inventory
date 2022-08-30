@@ -3,9 +3,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
 module.exports = (env) => {
-  env.API_PORT;
   env.SERVER_HOSTNAME;
-  console.log("API_PORT: ", env.API_PORT);
   console.log("SERVER_HOSTNAME: ", env.SERVER_HOSTNAME);
   const envKeys = Object.keys(env).reduce((prev, next) => {
     prev[`process.env.${next}`] = JSON.stringify(env[next]);

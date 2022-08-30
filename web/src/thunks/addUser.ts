@@ -1,4 +1,4 @@
-const BASE_URL = `${process.env.SERVER_HOSTNAME}:${process.env.API_PORT}/api`;
+const BASE_URL = `${process.env.SERVER_HOSTNAME}/api`;
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import UserRequest from "types/UserRequest";
 import User from "types/User";

@@ -11,7 +11,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import GroupIcon from "@mui/icons-material/Group";
 import CategoryIcon from "@mui/icons-material/Category";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -57,7 +56,7 @@ const DashDrawer = (props: DashDrawerProps) => {
       <Divider />
       <List>
         <ListItem key={"Assets"} disablePadding>
-          <ListItemButton>
+          <ListItemButton href="/">
             <ListItemIcon>
               <CategoryIcon />
             </ListItemIcon>
@@ -70,14 +69,6 @@ const DashDrawer = (props: DashDrawerProps) => {
               <PersonAddIcon />
             </ListItemIcon>
             <ListItemText primary={"Add User"} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={"Manage Users"} disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <GroupIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Manage Users"} />
           </ListItemButton>
         </ListItem>
       </List>

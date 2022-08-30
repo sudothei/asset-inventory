@@ -108,7 +108,7 @@ const Login = () => {
                 }}
               >
                 <Button type="submit" variant="contained" color="secondary">
-                  Update
+                  Login
                 </Button>
               </Box>
             </Box>

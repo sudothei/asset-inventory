@@ -23,7 +23,6 @@ async fn main() -> std::io::Result<()> {
         env::var("DATABASE_HOSTNAME").expect("DATABASE_HOSTNAME must be set");
     let database_port: String = env::var("DATABASE_PORT").expect("DATABASE_PORT must be set");
     let database_name: String = env::var("DATABASE_NAME").expect("DATABASE_NAME must be set");
-    let api_port: String = env::var("API_PORT").expect("API_PORT must be set");
 
     // database config
     let mut client_options = ClientOptions::parse(format!(
@@ -70,7 +69,7 @@ async fn main() -> std::io::Result<()> {
             .service(password::request_email)
             .service(password::set_password)
     })
-    .bind(format!("0.0.0.0:{}", api_port))?
+    .bind(format!("0.0.0.0:{}", 80))?
     .run()
     .await
 }

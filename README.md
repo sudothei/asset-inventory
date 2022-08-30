@@ -23,8 +23,10 @@
 1. Install Docker on Linux: [docs.docker.com/engine/install](https://docs.docker.com/engine/install/)
 2. Install Docker Compose: [docs.docker.com/compose/install](https://docs.docker.com/compose/install/)
 3. Edit the `.env` to your preferences
-4. Run `docker-compose build inventory-asset-db`
-5. Run `docker-compose up --no-deps -d inventory-asset-db`
+4. Include any necessary SSL certificates in the `api/certificates` folder and
+   add a `.crt` extension.
+5. Run `docker-compose build inventory-asset-db`
+6. Run `docker-compose up --no-deps -d inventory-asset-db`
 
 ## Finishing steps
 

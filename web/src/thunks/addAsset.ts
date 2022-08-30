@@ -1,4 +1,4 @@
-const BASE_URL = `${process.env.SERVER_HOSTNAME}:${process.env.API_PORT}/api`;
+const BASE_URL = `${process.env.SERVER_HOSTNAME}/api`;
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import AssetRequest from "types/AssetRequest";
 import Asset from "types/Asset";
