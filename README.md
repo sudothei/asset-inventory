@@ -5,7 +5,7 @@
 1. Install on Linux using official package: [mongodb.com/docs/manual/administration/install-on-linux](https://www.mongodb.com/docs/manual/administration/install-on-linux/)
 2. Enable service: `sudo systemctl enable mongodb`
 3. Start service: `sudo systemctl start mongodb` (may require reboot if any errors)
-4. Copy the `initdb.js` file to the current directory
+4. Copy the `initdb.js` file to the current directory and edit it to set the DB password
 5. Run `mongosh`
 6. Run `load("initdb.js")`, it will prompt for a password to use for the admin
    account (this is different from the inventoryAssetDB service account)
@@ -25,7 +25,7 @@
 3. Edit the `.env` to your preferences
 4. Include any necessary SSL certificates in the `api/certificates` folder and
    add a `.crt` extension.
-5. Run `docker-compose build inventory-asset-db`
+5. Run `docker-compose build`
 6. Run `docker-compose up --no-deps -d inventory-asset-db`
 
 ## Finishing steps
