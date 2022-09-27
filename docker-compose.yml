@@ -34,5 +34,7 @@ services:
         - SMTP_FROM=${SMTP_FROM}
         - SMTP_SERVER=${SMTP_SERVER}
         - SMTP_USE_TLS=${SMTP_USE_TLS}
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
     ports:
       - "443:443"
