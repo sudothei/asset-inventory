@@ -35,4 +35,3 @@ ARG SMTP_USE_TLS
 COPY --from=build /api/target/release/api .
 COPY --from=generate-certs ./ /etc/nginx/certs
 COPY ./web.conf /etc/nginx/conf.d/web.conf
-RUN ["./api"]

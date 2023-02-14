@@ -25,9 +25,9 @@
 3. Edit the `.env` to your preferences
 4. Include any necessary SSL certificates in the `api/certificates` folder and
    add a `.crt` extension.
-5. Run `docker login docker-artifactory.spectrumflow.net` and enter credentials
-6. Run `docker-compose build`
-7. Run `docker-compose up --no-deps -d inventory-asset-db`
+5. Run `sudo docker login docker-artifactory.spectrumflow.net` and enter credentials
+6. Run `sudo docker-compose build`
+7. Run `sudo docker-compose up --no-deps -d`
 
 ## Finishing steps
 

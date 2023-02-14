@@ -38,3 +38,5 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     ports:
       - "443:443"
+    entrypoint:
+      - "./api"
