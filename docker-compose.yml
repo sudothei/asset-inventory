@@ -1,0 +1,42 @@
+version: "3"
+services:
+  web:
+    build:
+      context: ./web
+      args:
+        - COUNTRY=${COUNTRY}
+        - STATE=${STATE}
+        - LOCATION=${LOCATION}
+        - ORGANIZATION=${ORGANIZATION}
+        - ORGANIZATIONAL_UNIT=${ORGANIZATIONAL_UNIT}
+        - COMMON_NAME=${COMMON_NAME}
+        - SERVER_HOSTNAME=${SERVER_HOSTNAME}
+    ports:
+      - "443:443"
+  api:
+    build:
+      context: ./api
+      args:
+        - COUNTRY=${COUNTRY}
+        - STATE=${STATE}
+        - LOCATION=${LOCATION}
+        - ORGANIZATION=${ORGANIZATION}
+        - ORGANIZATIONAL_UNIT=${ORGANIZATIONAL_UNIT}
+        - COMMON_NAME=${COMMON_NAME}
+        - BCRYPT_COST_FACTOR=${BCRYPT_COST_FACTOR}
+        - SECRET${SECRET}
+        - DATABASE_HOSTNAME=${DATABASE_HOSTNAME}
+        - DATABASE_PORT=${DATABASE_PORT}
+        - DATABASE_NAME=${DATABASE_NAME}
+        - DATABASE_USERNAME=${DATABASE_USERNAME}
+        - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        - SERVER_HOSTNAME=${SERVER_HOSTNAME}
+        - SMTP_FROM=${SMTP_FROM}
+        - SMTP_SERVER=${SMTP_SERVER}
+        - SMTP_USE_TLS=${SMTP_USE_TLS}
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    ports:
+      - "443:443"
+    entrypoint:
+      - "./api"

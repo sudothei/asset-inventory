@@ -1,0 +1,19 @@
+[package]
+name = "api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-cors = "0.6.1"
+actix-web = "4.1.0"
+bcrypt = "0.13.0"
+bson = "2.3.0"
+chrono = "0.4"
+futures = "0.3.21"
+futures-util = "0.3.21"
+jsonwebtoken = "8.1.1"
+lettre = { version = "0.10.1", features = ["native-tls", "tokio1", "tokio1-native-tls"] }
+mongodb = "2.2.2"
+rand = "0.8.5"
+serde = "1.0.139"
+tokio-stream = "0.1.9"
